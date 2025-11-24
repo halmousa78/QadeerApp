@@ -7,6 +7,21 @@ namespace texts {
         namespace Administration {
             export function asKey(): typeof Administration;
             export function asTry(): typeof Administration;
+            namespace Department {
+                export function asKey(): typeof Department;
+                export function asTry(): typeof Department;
+                export const DeleteDate: string;
+                export const DeleteUserId: string;
+                export const DepartmentId: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const IsActive: string;
+                export const Name: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+            }
             namespace Language {
                 export function asKey(): typeof Language;
                 export function asTry(): typeof Language;
@@ -33,9 +48,28 @@ namespace texts {
                 export const RoleName: string;
                 export const RolePermissionId: string;
             }
+            namespace Specialization {
+                export function asKey(): typeof Specialization;
+                export function asTry(): typeof Specialization;
+                export const DeleteDate: string;
+                export const DeleteUserId: string;
+                export const DepartmentId: string;
+                export const DepartmentName: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const IsActive: string;
+                export const Name: string;
+                export const SpecializationId: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+            }
             namespace User {
                 export function asKey(): typeof User;
                 export function asTry(): typeof User;
+                export const DepartmentId: string;
+                export const DepartmentName: string;
                 export const DisplayName: string;
                 export const Email: string;
                 export const EntityPlural: string;
@@ -50,6 +84,8 @@ namespace texts {
                 export const PasswordSalt: string;
                 export const Roles: string;
                 export const Source: string;
+                export const SpecializationId: string;
+                export const SpecializationName: string;
                 export const UpdateDate: string;
                 export const UpdateUserId: string;
                 export const UserId: string;
@@ -181,9 +217,11 @@ namespace texts {
 const Texts: typeof texts = proxyTexts({}, '', {
     Db: {
         Administration: {
+            Department: {},
             Language: {},
             Role: {},
             RolePermission: {},
+            Specialization: {},
             User: {},
             UserPermission: {},
             UserRole: {}

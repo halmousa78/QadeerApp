@@ -11,6 +11,7 @@ public class UserSaveHandler(IRequestContext context, IOptions<EnvironmentSettin
     private string password;
     private readonly IOptions<EnvironmentSettings> environmentOptions = environmentOptions ??
         throw new ArgumentNullException(nameof(environmentOptions));
+    private static SpecializationRow.RowFields SpecFld { get; } = SpecializationRow.Fields;
 
     protected override void GetEditableFields(HashSet<Field> editable)
     {
@@ -66,6 +67,39 @@ public class UserSaveHandler(IRequestContext context, IOptions<EnvironmentSettin
             Row.Username = ValidateUsername(Connection, Row.Username, null, Localizer);
             Row.DisplayName = UserHelper.ValidateDisplayName(Row.DisplayName, Localizer);
         }
+
+        var departmentId = Row.DepartmentId ?? Old?.DepartmentId;
+        if (departmentId == null)
+            throw DataValidation.RequiredError(Fld.DepartmentId, Localizer);
+
+        var department = Connection.TryById<DepartmentRow>(departmentId.Value);
+        if (department == null || department.IsActive != 1)
+            throw new ValidationError("InvalidDepartment", "DepartmentId",
+                "Selected department is not available.");
+
+        var specializationId = Row.IsAssigned(Fld.SpecializationId)
+            ? Row.SpecializationId
+            : (Row.DepartmentId == null || Row.DepartmentId == Old?.DepartmentId ? Old?.SpecializationId : null);
+        if (specializationId != null)
+        {
+            var specialization = Connection.TryById<SpecializationRow>(specializationId.Value);
+            if (specialization == null || specialization.DepartmentId != departmentId || specialization.IsActive != 1)
+                throw new ValidationError("InvalidSpecialization", "SpecializationId",
+                    "Selected specialization is not available for this department.");
+        }
+        else
+        {
+            var hasActiveSpecializations = Connection.Exists<SpecializationRow>(
+                SpecFld.DepartmentId == departmentId.Value &
+                SpecFld.IsActive == 1);
+
+            if (hasActiveSpecializations)
+                throw new ValidationError("SpecializationRequired", "SpecializationId",
+                    "Please select a specialization for the chosen department.");
+        }
+
+        Row.DepartmentId = departmentId;
+        Row.SpecializationId = specializationId;
 
         if (IsCreate || (Row.IsAssigned(Fld.Password) && !Row.Password.IsEmptyOrNull()))
         {

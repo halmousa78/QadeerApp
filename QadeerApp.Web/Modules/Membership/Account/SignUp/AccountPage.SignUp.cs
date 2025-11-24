@@ -23,6 +23,8 @@ public partial class AccountPage : Controller
             ArgumentNullException.ThrowIfNull(request);
             ArgumentException.ThrowIfNullOrWhiteSpace(request.Email);
             ArgumentException.ThrowIfNullOrEmpty(request.Password);
+            if (request.DepartmentId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(request.DepartmentId));
 
             UserHelper.ValidatePassword(request.Password, Localizer);
             ArgumentException.ThrowIfNullOrWhiteSpace(request.DisplayName);
@@ -32,6 +34,26 @@ public partial class AccountPage : Controller
                     UserRow.Fields.Email == request.Email))
             {
                 throw new ValidationError("EmailInUse", MembershipValidationTexts.EmailInUse.ToString(Localizer));
+            }
+
+            var department = connection.TryById<DepartmentRow>(request.DepartmentId);
+            if (department == null || department.IsActive != 1)
+                throw new ValidationError("InvalidDepartment", "DepartmentId", "القسم غير موجود او غير مفعل.");
+
+            if (request.SpecializationId != null)
+            {
+                var specialization = connection.TryById<SpecializationRow>(request.SpecializationId.Value);
+                if (specialization == null || specialization.DepartmentId != request.DepartmentId || specialization.IsActive != 1)
+                    throw new ValidationError("InvalidSpecialization", "SpecializationId", "التخصص غير متاح لهذا القسم.");
+            }
+            else
+            {
+                var hasActiveSpecializations = connection.Exists<SpecializationRow>(
+                    SpecializationRow.Fields.DepartmentId == request.DepartmentId &
+                    SpecializationRow.Fields.IsActive == 1);
+
+                if (hasActiveSpecializations)
+                    throw new ValidationError("SpecializationRequired", "SpecializationId", "اختر تخصصاً للقسم المحدد.");
             }
 
             using var uow = new UnitOfWork(connection);
@@ -48,6 +70,8 @@ public partial class AccountPage : Controller
                 Source = "sign",
                 DisplayName = displayName,
                 Email = email,
+                DepartmentId = request.DepartmentId,
+                SpecializationId = request.SpecializationId,
                 PasswordHash = hash,
                 PasswordSalt = salt,
                 IsActive = 0,

@@ -8,6 +8,8 @@ export interface UserColumns {
     DisplayName: Column<UserRow>;
     Email: Column<UserRow>;
     Source: Column<UserRow>;
+    DepartmentName: Column<UserRow>;
+    SpecializationName: Column<UserRow>;
     Roles: Column<UserRow>;
 }
 

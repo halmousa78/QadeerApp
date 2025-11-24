@@ -14,6 +14,10 @@ public class UserColumns
     public string Email { get; set; }
     [Width(80)]
     public string Source { get; set; }
+    [Width(150)]
+    public string DepartmentName { get; set; }
+    [Width(150)]
+    public string SpecializationName { get; set; }
     [QuickFilter, Width(300)]
     public string Roles { get; set; }
 }

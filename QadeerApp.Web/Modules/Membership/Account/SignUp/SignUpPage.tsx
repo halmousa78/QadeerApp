@@ -1,4 +1,4 @@
-import { informationDialog, PropertyPanel, resolveUrl, serviceCall } from "@serenity-is/corelib";
+import { EditorUtils, informationDialog, PropertyPanel, resolveUrl, serviceCall } from "@serenity-is/corelib";
 import { SignUpForm, SignUpRequest, SignUpResponse } from "../../../ServerTypes/Membership";
 import { MembershipValidationTexts, SignUpFormTexts } from "../../../ServerTypes/Texts";
 import { AccountPanelTitle } from "../AccountPanelTitle";
@@ -9,6 +9,7 @@ export default function pageInit(opt: any) {
 
 class SignUpPanel extends PropertyPanel<SignUpRequest, any> {
 
+    private specializationGuard = false;
     protected override getFormKey() { return SignUpForm.formKey; }
 
     private form: SignUpForm;
@@ -32,6 +33,14 @@ class SignUpPanel extends PropertyPanel<SignUpRequest, any> {
                 return MembershipValidationTexts.PasswordConfirmMismatch;
             }
         });
+
+        this.form.DepartmentId.change(() => {
+            this.form.SpecializationId.value = null;
+            this.updateSpecializationRequirement();
+        });
+
+        this.form.SpecializationId.change(() => this.updateSpecializationRequirement());
+        this.updateSpecializationRequirement();
     }
 
     submitClick() {
@@ -52,6 +61,21 @@ class SignUpPanel extends PropertyPanel<SignUpRequest, any> {
                 });
             }
         });
+    }
+
+    private updateSpecializationRequirement() {
+        if (this.specializationGuard)
+            return;
+
+        this.specializationGuard = true;
+        const specEditor: any = this.form.SpecializationId;
+        const items: any[] = specEditor.items ?? (specEditor.get_items?.() ?? []);
+        const hasOptions = items.length > 0;
+        EditorUtils.setRequired(this.form.SpecializationId, hasOptions);
+        if (!hasOptions && specEditor.value != null) {
+            specEditor.value = null;
+        }
+        this.specializationGuard = false;
     }
 
     protected override renderContents() {

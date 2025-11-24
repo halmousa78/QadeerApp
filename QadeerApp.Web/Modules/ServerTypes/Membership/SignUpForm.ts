@@ -1,7 +1,9 @@
-﻿import { EmailAddressEditor, initFormType, PasswordEditor, PrefixedContext, StringEditor } from "@serenity-is/corelib";
+import { EmailAddressEditor, initFormType, LookupEditor, PasswordEditor, PrefixedContext, StringEditor } from "@serenity-is/corelib";
 
 export interface SignUpForm {
     DisplayName: StringEditor;
+    DepartmentId: LookupEditor;
+    SpecializationId: LookupEditor;
     Email: EmailAddressEditor;
     ConfirmEmail: EmailAddressEditor;
     Password: PasswordEditor;
@@ -19,15 +21,18 @@ export class SignUpForm extends PrefixedContext {
             SignUpForm.init = true;
 
             var w0 = StringEditor;
-            var w1 = EmailAddressEditor;
-            var w2 = PasswordEditor;
+            var w1 = LookupEditor;
+            var w2 = EmailAddressEditor;
+            var w3 = PasswordEditor;
 
             initFormType(SignUpForm, [
                 'DisplayName', w0,
-                'Email', w1,
-                'ConfirmEmail', w1,
-                'Password', w2,
-                'ConfirmPassword', w2
+                'DepartmentId', w1,
+                'SpecializationId', w1,
+                'Email', w2,
+                'ConfirmEmail', w2,
+                'Password', w3,
+                'ConfirmPassword', w3
             ]);
         }
     }

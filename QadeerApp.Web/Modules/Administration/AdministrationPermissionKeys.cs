@@ -9,4 +9,10 @@ public class PermissionKeys
 
     [Description("Languages and Translations")]
     public const string Translation = "Administration:Translation";
+
+    [Description("Departments Management")]
+    public const string Departments = "Administration:Departments";
+
+    [Description("Specializations Management")]
+    public const string Specializations = "Administration:Specializations";
 }

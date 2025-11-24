@@ -44,6 +44,20 @@ public sealed class UserRow : Serenity.Extensions.Entities.LoggingRow<UserRow.Ro
     [DisplayName("Last Directory Update"), Insertable(false), Updatable(false)]
     public DateTime? LastDirectoryUpdate { get => fields.LastDirectoryUpdate[this]; set => fields.LastDirectoryUpdate[this] = value; }
 
+    [DisplayName("Department"), NotNull, ForeignKey(typeof(DepartmentRow)), LeftJoin("d"), TextualField(nameof(DepartmentName))]
+    [LookupEditor(typeof(DepartmentRow))]
+    public int? DepartmentId { get => fields.DepartmentId[this]; set => fields.DepartmentId[this] = value; }
+
+    [DisplayName("Department"), Expression("d.[Name]")]
+    public string DepartmentName { get => fields.DepartmentName[this]; set => fields.DepartmentName[this] = value; }
+
+    [DisplayName("Specialization"), ForeignKey(typeof(SpecializationRow)), LeftJoin("s"), TextualField(nameof(SpecializationName))]
+    [LookupEditor(typeof(SpecializationRow), CascadeFrom = nameof(DepartmentId), CascadeField = nameof(SpecializationRow.DepartmentId))]
+    public int? SpecializationId { get => fields.SpecializationId[this]; set => fields.SpecializationId[this] = value; }
+
+    [DisplayName("Specialization"), Expression("s.[Name]")]
+    public string SpecializationName { get => fields.SpecializationName[this]; set => fields.SpecializationName[this] = value; }
+
     [DisplayName("Roles"), LinkingSetRelation(typeof(UserRoleRow), nameof(UserRoleRow.UserId), nameof(UserRoleRow.RoleId))]
     [AsyncLookupEditor(typeof(RoleRow), Multiple = true)]
     public List<int> Roles { get => fields.Roles[this]; set => fields.Roles[this] = value; }
@@ -66,6 +80,10 @@ public sealed class UserRow : Serenity.Extensions.Entities.LoggingRow<UserRow.Ro
         public StringField UserImage;
         public DateTimeField LastDirectoryUpdate;
         public Int16Field IsActive;
+        public Int32Field DepartmentId;
+        public StringField DepartmentName;
+        public Int32Field SpecializationId;
+        public StringField SpecializationName;
 
         public StringField Password;
         public StringField PasswordConfirm;

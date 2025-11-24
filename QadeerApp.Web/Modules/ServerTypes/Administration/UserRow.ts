@@ -11,6 +11,10 @@ export interface UserRow {
     UserImage?: string;
     LastDirectoryUpdate?: string;
     IsActive?: number;
+    DepartmentId?: number;
+    DepartmentName?: string;
+    SpecializationId?: number;
+    SpecializationName?: string;
     Password?: string;
     PasswordConfirm?: string;
     Roles?: number[];

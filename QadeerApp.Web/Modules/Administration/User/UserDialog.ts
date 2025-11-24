@@ -7,6 +7,8 @@ import { UserPermissionDialog } from "../UserPermission/UserPermissionDialog";
 export class UserDialog extends EntityDialog<UserRow, any> {
     static override[Symbol.typeInfo] = this.registerClass(nsAdministration);
 
+    private specializationGuard = false;
+
     protected override getFormKey() { return UserForm.formKey; }
     protected override getIdProperty() { return UserRow.idProperty; }
     protected override getIsActiveProperty() { return UserRow.isActiveProperty; }
@@ -32,6 +34,16 @@ export class UserDialog extends EntityDialog<UserRow, any> {
             if (this.form.Password.value != this.form.PasswordConfirm.value)
                 return MembershipValidationTexts.PasswordConfirmMismatch;
         });
+
+        this.form.DepartmentId.change(e => {
+            this.form.SpecializationId.value = null;
+            this.updateSpecializationRequirement();
+        });
+
+        this.form.SpecializationId.change(e => this.updateSpecializationRequirement());
+
+        // make sure specialization starts with correct required state
+        this.updateSpecializationRequirement();
     }
 
     protected override getToolbarButtons() {
@@ -66,5 +78,22 @@ export class UserDialog extends EntityDialog<UserRow, any> {
             .closest('.field').findFirst('sup').toggle(this.isNew());
         this.form.PasswordConfirm.element.toggleClass('required', this.isNew())
             .closest('.field').findFirst('sup').toggle(this.isNew());
+
+        this.updateSpecializationRequirement();
+    }
+
+    private updateSpecializationRequirement() {
+        if (this.specializationGuard)
+            return;
+
+        this.specializationGuard = true;
+        const specializationEditor: any = this.form.SpecializationId;
+        const items: any[] = specializationEditor.items ?? (specializationEditor.get_items?.() ?? []);
+        // when cascade has no items for the selected department we don't force a choice
+        const hasOptions = items.length > 0;
+        EditorUtils.setRequired(this.form.SpecializationId, hasOptions);
+        if (!hasOptions && specializationEditor.value != null)
+            specializationEditor.value = null;
+        this.specializationGuard = false;
     }
 }
