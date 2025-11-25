@@ -117,6 +117,96 @@ namespace texts {
                 export const Username: string;
             }
         }
+        namespace Cv {
+            export function asKey(): typeof Cv;
+            export function asTry(): typeof Cv;
+            namespace EmployeeCourse {
+                export function asKey(): typeof EmployeeCourse;
+                export function asTry(): typeof EmployeeCourse;
+                export const EmployeeCourseId: string;
+                export const EmployeeCvId: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const Name: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+                export const UserId: string;
+            }
+            namespace EmployeeCv {
+                export function asKey(): typeof EmployeeCv;
+                export function asTry(): typeof EmployeeCv;
+                export const Address: string;
+                export const BuildingNumber: string;
+                export const Courses: string;
+                export const CvUpdatedOn: string;
+                export const EmployeeCvId: string;
+                export const EnglishLevel: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const Experiences: string;
+                export const ExtensionNumber: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const Mobile: string;
+                export const OfficeNumber: string;
+                export const Qualifications: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+                export const UserDisplayName: string;
+                export const UserId: string;
+                export const Username: string;
+            }
+            namespace EmployeeCvStatus {
+                export function asKey(): typeof EmployeeCvStatus;
+                export function asTry(): typeof EmployeeCvStatus;
+                export const CourseCount: string;
+                export const CvUpdatedOn: string;
+                export const DepartmentId: string;
+                export const DepartmentName: string;
+                export const DisplayName: string;
+                export const EmployeeCvId: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const ExperienceCount: string;
+                export const IsActive: string;
+                export const IsCompleted: string;
+                export const QualificationCount: string;
+                export const SpecializationId: string;
+                export const SpecializationName: string;
+                export const UserId: string;
+                export const Username: string;
+            }
+            namespace EmployeeExperience {
+                export function asKey(): typeof EmployeeExperience;
+                export function asTry(): typeof EmployeeExperience;
+                export const EmployeeCvId: string;
+                export const EmployeeExperienceId: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const Name: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+                export const UserId: string;
+            }
+            namespace EmployeeQualification {
+                export function asKey(): typeof EmployeeQualification;
+                export function asTry(): typeof EmployeeQualification;
+                export const EmployeeCvId: string;
+                export const EmployeeQualificationId: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const Name: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+                export const UserId: string;
+            }
+        }
     }
     export declare namespace Forms {
         export function asKey(): typeof Forms;
@@ -225,6 +315,13 @@ const Texts: typeof texts = proxyTexts({}, '', {
             User: {},
             UserPermission: {},
             UserRole: {}
+        },
+        Cv: {
+            EmployeeCourse: {},
+            EmployeeCv: {},
+            EmployeeCvStatus: {},
+            EmployeeExperience: {},
+            EmployeeQualification: {}
         }
     },
     Forms: {

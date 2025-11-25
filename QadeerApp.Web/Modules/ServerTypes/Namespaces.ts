@@ -1,4 +1,6 @@
-﻿export const AdministrationNS: "QadeerApp.Administration" = "QadeerApp.Administration";
+export const AdministrationNS: "QadeerApp.Administration" = "QadeerApp.Administration";
 export const nsAdministration: "QadeerApp.Administration." = "QadeerApp.Administration.";
+export const CvNS: "QadeerApp.Cv" = "QadeerApp.Cv";
+export const nsCv: "QadeerApp.Cv." = "QadeerApp.Cv.";
 export const MembershipNS: "QadeerApp.Membership" = "QadeerApp.Membership";
 export const nsMembership: "QadeerApp.Membership." = "QadeerApp.Membership.";
