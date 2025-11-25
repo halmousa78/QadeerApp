@@ -65,6 +65,64 @@ namespace texts {
                 export const UpdateDate: string;
                 export const UpdateUserId: string;
             }
+            namespace TrainingCourse {
+                export function asKey(): typeof TrainingCourse;
+                export function asTry(): typeof TrainingCourse;
+                export const Code: string;
+                export const DeleteDate: string;
+                export const DeleteUserId: string;
+                export const DepartmentId: string;
+                export const DepartmentName: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const IsActive: string;
+                export const Name: string;
+                export const SpecializationId: string;
+                export const SpecializationName: string;
+                export const TrainingCourseId: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+            }
+            namespace TrainingGrade {
+                export function asKey(): typeof TrainingGrade;
+                export function asTry(): typeof TrainingGrade;
+                export const CourseCode: string;
+                export const CourseName: string;
+                export const Department: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const Grade: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const IsActive: string;
+                export const ReferenceNumber: string;
+                export const ScheduleType: string;
+                export const Specialization: string;
+                export const TrainerName: string;
+                export const TrainerNumber: string;
+                export const TrainingGradeId: string;
+                export const TrainingLevel: string;
+                export const TrainingTerm: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+            }
+            namespace TrainingTerm {
+                export function asKey(): typeof TrainingTerm;
+                export function asTry(): typeof TrainingTerm;
+                export const DeleteDate: string;
+                export const DeleteUserId: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const IsActive: string;
+                export const Name: string;
+                export const TrainingTermId: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+            }
             namespace User {
                 export function asKey(): typeof User;
                 export function asTry(): typeof User;
@@ -312,6 +370,9 @@ const Texts: typeof texts = proxyTexts({}, '', {
             Role: {},
             RolePermission: {},
             Specialization: {},
+            TrainingCourse: {},
+            TrainingGrade: {},
+            TrainingTerm: {},
             User: {},
             UserPermission: {},
             UserRole: {}

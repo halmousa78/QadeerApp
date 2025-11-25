@@ -15,4 +15,13 @@ public class PermissionKeys
 
     [Description("Specializations Management")]
     public const string Specializations = "Administration:Specializations";
+
+    [Description("Training Terms Management")]
+    public const string TrainingTerms = "Administration:TrainingTerms";
+
+    [Description("Training Courses Management")]
+    public const string TrainingCourses = "Administration:TrainingCourses";
+
+    [Description("Training Grades Import")]
+    public const string TrainingGrades = "Administration:TrainingGrades";
 }

@@ -11,6 +11,10 @@ public static partial class ESM
     public const string ScriptInit = "~/esm/Modules/Common/ScriptInit.js";
     public const string SignUpPage = "~/esm/Modules/Membership/Account/SignUp/SignUpPage.js";
     public const string SpecializationPage = "~/esm/Modules/Administration/Specialization/SpecializationPage.js";
+    public const string TrainingCoursePage = "~/esm/Modules/Administration/TrainingCourse/TrainingCoursePage.js";
+    public const string TrainingGradePage = "~/esm/Modules/Administration/TrainingGrade/TrainingGradePage.js";
+    public const string TrainingGradePivotPage = "~/esm/Modules/Administration/TrainingGradePivot/TrainingGradePivotPage.js";
+    public const string TrainingTermPage = "~/esm/Modules/Administration/TrainingTerm/TrainingTermPage.js";
     public const string TranslationPage = "~/esm/Modules/Administration/Translation/TranslationPage.js";
     public const string UserPage = "~/esm/Modules/Administration/User/UserPage.js";
 
@@ -36,6 +40,26 @@ public static partial class ESM
             public static partial class Specialization
             {
                 public const string SpecializationPage = "~/esm/Modules/Administration/Specialization/SpecializationPage.js";
+            }
+
+            public static partial class TrainingCourse
+            {
+                public const string TrainingCoursePage = "~/esm/Modules/Administration/TrainingCourse/TrainingCoursePage.js";
+            }
+
+            public static partial class TrainingGrade
+            {
+                public const string TrainingGradePage = "~/esm/Modules/Administration/TrainingGrade/TrainingGradePage.js";
+            }
+
+            public static partial class TrainingGradePivot
+            {
+                public const string TrainingGradePivotPage = "~/esm/Modules/Administration/TrainingGradePivot/TrainingGradePivotPage.js";
+            }
+
+            public static partial class TrainingTerm
+            {
+                public const string TrainingTermPage = "~/esm/Modules/Administration/TrainingTerm/TrainingTermPage.js";
             }
 
             public static partial class Translation
