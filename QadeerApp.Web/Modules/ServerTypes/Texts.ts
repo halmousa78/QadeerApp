@@ -30,6 +30,28 @@ namespace texts {
                 export const LanguageId: string;
                 export const LanguageName: string;
             }
+            namespace PortalLink {
+                export function asKey(): typeof PortalLink;
+                export function asTry(): typeof PortalLink;
+                export const DeleteDate: string;
+                export const DeleteUserId: string;
+                export const DepartmentId: string;
+                export const DepartmentName: string;
+                export const DisplayOrder: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const IsActive: string;
+                export const PortalLinkId: string;
+                export const Section: string;
+                export const SpecializationId: string;
+                export const SpecializationName: string;
+                export const Title: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+                export const Url: string;
+            }
             namespace Role {
                 export function asKey(): typeof Role;
                 export function asTry(): typeof Role;
@@ -62,6 +84,64 @@ namespace texts {
                 export const IsActive: string;
                 export const Name: string;
                 export const SpecializationId: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+            }
+            namespace TrainingCalendar {
+                export function asKey(): typeof TrainingCalendar;
+                export function asTry(): typeof TrainingCalendar;
+                export const DeleteDate: string;
+                export const DeleteUserId: string;
+                export const EndDate: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const IsActive: string;
+                export const IsEnabled: string;
+                export const Name: string;
+                export const StartDate: string;
+                export const TrainingCalendarId: string;
+                export const TrainingTermId: string;
+                export const TrainingTermName: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+            }
+            namespace TrainingCalendarBreak {
+                export function asKey(): typeof TrainingCalendarBreak;
+                export function asTry(): typeof TrainingCalendarBreak;
+                export const DeleteDate: string;
+                export const DeleteUserId: string;
+                export const EndDate: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const IsActive: string;
+                export const StartDate: string;
+                export const Title: string;
+                export const TrainingCalendarBreakId: string;
+                export const TrainingCalendarId: string;
+                export const TrainingCalendarName: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+            }
+            namespace TrainingCalendarNote {
+                export function asKey(): typeof TrainingCalendarNote;
+                export function asTry(): typeof TrainingCalendarNote;
+                export const DeleteDate: string;
+                export const DeleteUserId: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const IsActive: string;
+                export const NoteDate: string;
+                export const NoteText: string;
+                export const Title: string;
+                export const TrainingCalendarId: string;
+                export const TrainingCalendarName: string;
+                export const TrainingCalendarNoteId: string;
                 export const UpdateDate: string;
                 export const UpdateUserId: string;
             }
@@ -98,8 +178,10 @@ namespace texts {
                 export const InsertUserId: string;
                 export const IsActive: string;
                 export const ReferenceNumber: string;
+                export const RegistrationStatus: string;
                 export const ScheduleType: string;
                 export const Specialization: string;
+                export const TraineeStatus: string;
                 export const TrainerName: string;
                 export const TrainerNumber: string;
                 export const TrainingGradeId: string;
@@ -130,6 +212,7 @@ namespace texts {
                 export const DepartmentName: string;
                 export const DisplayName: string;
                 export const Email: string;
+                export const EmployeeNumber: string;
                 export const EntityPlural: string;
                 export const EntitySingular: string;
                 export const InsertDate: string;
@@ -200,6 +283,7 @@ namespace texts {
                 export const Courses: string;
                 export const CvUpdatedOn: string;
                 export const EmployeeCvId: string;
+                export const EmployeeNumber: string;
                 export const EnglishLevel: string;
                 export const EntityPlural: string;
                 export const EntitySingular: string;
@@ -367,9 +451,13 @@ const Texts: typeof texts = proxyTexts({}, '', {
         Administration: {
             Department: {},
             Language: {},
+            PortalLink: {},
             Role: {},
             RolePermission: {},
             Specialization: {},
+            TrainingCalendar: {},
+            TrainingCalendarBreak: {},
+            TrainingCalendarNote: {},
             TrainingCourse: {},
             TrainingGrade: {},
             TrainingTerm: {},

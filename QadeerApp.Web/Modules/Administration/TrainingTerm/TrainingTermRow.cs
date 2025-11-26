@@ -2,8 +2,11 @@ namespace QadeerApp.Administration;
 
 [ConnectionKey("Default"), Module("Administration"), TableName("TrainingTerms")]
 [DisplayName("Training Terms"), InstanceName("Training Term")]
-[ReadPermission(PermissionKeys.TrainingTerms)]
-[ModifyPermission(PermissionKeys.TrainingTerms)]
+[ReadPermission(PermissionKeys.TrainingTerm.View)]
+[ModifyPermission(PermissionKeys.TrainingTerm.Update)]
+[InsertPermission(PermissionKeys.TrainingTerm.Insert)]
+[UpdatePermission(PermissionKeys.TrainingTerm.Update)]
+[DeletePermission(PermissionKeys.TrainingTerm.Delete)]
 [LookupScript(Permission = "*")]
 public sealed class TrainingTermRow : Serenity.Extensions.Entities.LoggingRow<TrainingTermRow.RowFields>, IIdRow, INameRow, IIsActiveRow, IIsActiveDeletedRow, IDeleteLogRow
 {

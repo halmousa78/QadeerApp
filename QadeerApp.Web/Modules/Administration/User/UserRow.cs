@@ -2,8 +2,11 @@
 
 [ConnectionKey("Default"), Module("Administration"), TableName("Users")]
 [DisplayName("Users"), InstanceName("User")]
-[ReadPermission(PermissionKeys.Security)]
-[ModifyPermission(PermissionKeys.Security)]
+[ReadPermission(PermissionKeys.User.View)]
+[ModifyPermission(PermissionKeys.User.Update)]
+[InsertPermission(PermissionKeys.User.Insert)]
+[UpdatePermission(PermissionKeys.User.Update)]
+[DeletePermission(PermissionKeys.User.Delete)]
 [LookupScript(Permission = PermissionKeys.Security)]
 public sealed class UserRow : Serenity.Extensions.Entities.LoggingRow<UserRow.RowFields>, IIdRow, INameRow, IIsActiveRow, IDisplayNameRow, IEmailRow, IPasswordRow
 {
@@ -31,6 +34,9 @@ public sealed class UserRow : Serenity.Extensions.Entities.LoggingRow<UserRow.Ro
     [DisplayName("User Image"), Size(100)]
     [ImageUploadEditor(FilenameFormat = "UserImage/~", CopyToHistory = true)]
     public string UserImage { get => fields.UserImage[this]; set => fields.UserImage[this] = value; }
+
+    [DisplayName("Employee Number"), Size(50)]
+    public string EmployeeNumber { get => fields.EmployeeNumber[this]; set => fields.EmployeeNumber[this] = value; }
 
     [DisplayName("Password"), Size(50), NotMapped]
     public string Password { get => fields.Password[this]; set => fields.Password[this] = value; }
@@ -78,6 +84,7 @@ public sealed class UserRow : Serenity.Extensions.Entities.LoggingRow<UserRow.Ro
         public StringField DisplayName;
         public StringField Email;
         public StringField UserImage;
+        public StringField EmployeeNumber;
         public DateTimeField LastDirectoryUpdate;
         public Int16Field IsActive;
         public Int32Field DepartmentId;

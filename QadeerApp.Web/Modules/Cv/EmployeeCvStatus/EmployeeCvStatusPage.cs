@@ -9,6 +9,6 @@ public class EmployeeCvStatusPage : Controller
     public ActionResult Index()
     {
         return this.GridPage("@/Cv/EmployeeCvStatus/EmployeeCvStatusPage",
-            "تقرير اكتمال السيرة الذاتية");
+            "CV Completion Report");
     }
 }

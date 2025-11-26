@@ -10,6 +10,9 @@ public class EmployeeCvColumns
     public string UserDisplayName { get; set; }
 
     [Width(140)]
+    public string EmployeeNumber { get; set; }
+
+    [Width(140)]
     public string Mobile { get; set; }
 
     [Width(160)]
@@ -24,6 +27,6 @@ public class EmployeeCvColumns
     [Width(120)]
     public string BuildingNumber { get; set; }
 
-    [DisplayName("آخر تحديث"), Width(150)]
+    [DisplayName("Last Updated"), Width(150)]
     public DateTime CvUpdatedOn { get; set; }
 }

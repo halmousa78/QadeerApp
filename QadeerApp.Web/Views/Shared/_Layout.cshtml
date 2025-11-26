@@ -4,14 +4,15 @@
     Func<string, HtmlString> json = x => new HtmlString(Serenity.JSON.Stringify(x));
 var hideNav = (string)Context.Request.Query["hideNav"] == "1";
 var sidebarPaneCollapsed = Context?.Request?.Cookies?["SidebarPaneCollapsed"] == "1" ? " s-sidebar-pane-collapsed" : "";
+var rtl = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
 }
-<html lang="@System.Globalization.CultureInfo.CurrentUICulture.Name" class="@(hideNav ? " no-navigation" : "")">
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.Name" class="@(hideNav ? " no-navigation" : "")"@Html.Raw(rtl ? " dir=\"rtl\"" : "")>
 <head>
     <partial name="@MVC.Views.Shared._LayoutHead" />
     @RenderSection("Head", false)
     <title>@(ViewData["Title"]) - QadeerApp</title>
 </head>
-<body id="s-@(ViewData["PageId"])Page" class="@(ViewData["BodyClass"]) @(sidebarPaneCollapsed)">
+<body id="s-@(ViewData["PageId"])Page" class="@(ViewData["BodyClass"]) @(sidebarPaneCollapsed)@(rtl ? " rtl" : "")">
 <div id="PageBackground" style="display: none"></div>
 @if (hideNav)
 {

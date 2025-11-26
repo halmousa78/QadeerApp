@@ -7,7 +7,9 @@ public class PermissionKeysDataScript : DataScript<IEnumerable<string>>
 
     public PermissionKeysDataScript(IPermissionKeyLister permissionKeyLister)
     {
-        GroupKey = RoleRow.Fields.GenerationKey;
+        // bump GroupKey to invalidate cached permission tree when keys change
+        GroupKey = "Permissions_v3";
+        Expiration = TimeSpan.Zero; // disable server cache to force fresh load
         this.permissionKeyLister = permissionKeyLister ?? throw new ArgumentNullException(nameof(permissionKeyLister));
     }
 

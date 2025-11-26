@@ -23,10 +23,10 @@ export abstract class DepartmentRow {
     static getLookup() { return getLookup<DepartmentRow>('Administration.Department') }
     static async getLookupAsync() { return getLookupAsync<DepartmentRow>('Administration.Department') }
 
-    static readonly deletePermission = 'Administration:Departments';
-    static readonly insertPermission = 'Administration:Departments';
-    static readonly readPermission = 'Administration:Departments';
-    static readonly updatePermission = 'Administration:Departments';
+    static readonly deletePermission = 'Administration:Departments:Delete';
+    static readonly insertPermission = 'Administration:Departments:Insert';
+    static readonly readPermission = 'Administration:Departments:View';
+    static readonly updatePermission = 'Administration:Departments:Update';
 
     static readonly Fields = fieldsProxy<DepartmentRow>();
 }

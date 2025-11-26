@@ -1,0 +1,547 @@
+@model QadeerApp.Common.Pages.PublicPortalController.PortalCalendarViewModel
+@using System.Globalization
+@using System.Linq
+@{
+    Layout = null;
+    var langQuery = (Context?.Request?.Query["lang"].ToString() ?? "").ToLowerInvariant();
+    var lang = string.IsNullOrEmpty(langQuery) ? "ar" : langQuery;
+    var isRtl = lang == "ar";
+    var culture = new CultureInfo(isRtl ? "ar-SA" : "en-US");
+    ViewBag.Title = isRtl ? "البوابة العامة" : "Public Portal";
+
+    var todayLabel = $"{DateTime.Today.ToString("dddd", culture)} {DateTime.Today.ToString("dd/MM/yyyy", culture)}";
+    var text = new
+    {
+        NavHome = isRtl ? "الرئيسية" : "Home",
+        NavFeatures = isRtl ? "التقويم التدريبي" : "Training Calendar",
+        NavAbout = isRtl ? "روابط مهمة" : "Important Links",
+        NavPricing = isRtl ? "الأسعار" : "Pricing",
+        NavContact = isRtl ? "تواصل" : "Contact",
+        HeroTitle = isRtl ? "مرحباً بك في البوابة العامة" : "Welcome to the Public Portal",
+        HeroSubtitle = isRtl ? "وصول سريع إلى التقويم التدريبي والخطط التشغيلية والدليل." : "Quick access to training, operational plans, directory, and more.",
+        HeroCta = isRtl ? "تسجيل الدخول" : "Sign In",
+        CalendarTitle = isRtl ? "التقويم التدريبي" : "Training Calendar",
+        CalendarSubtitle = "",
+        CalendarCta = "",
+        AboutTitle = isRtl ? "روابط مهمة" : "Important Links",
+        AboutSubtitle = "",
+        PricingTitle = isRtl ? "اختر خطتك" : "Choose Your Plan",
+        PricingSubtitle = isRtl ? "خيارات مرنة تناسب فريقك." : "Flexible options tailored for your team.",
+        PricingMonthly = isRtl ? "شهري" : "Monthly",
+        PricingYearly = isRtl ? "سنوي" : "Yearly",
+        PricingCta = isRtl ? "ابدأ الآن" : "Get Started",
+        ContactTitle = isRtl ? "تواصل معنا" : "Get In Touch",
+        ContactSubtitle = isRtl ? "لديك أسئلة؟ يسعدنا تواصلك." : "Have questions? Reach out to us.",
+        ContactButton = isRtl ? "إرسال الرسالة" : "Submit Message",
+        FooterTitle = isRtl ? "اشترك في النشرة البريدية" : "Subscribe Our Newsletter",
+        FooterSubtitle = isRtl ? "احصل على آخر التحديثات والموارد." : "Get updates on new content and resources.",
+        FooterButton = isRtl ? "اشترك الآن" : "Subscribe Now",
+        FormName = isRtl ? "اسمك" : "Your Name",
+        FormEmail = isRtl ? "بريدك الإلكتروني" : "Your E-mail",
+        FormSubject = isRtl ? "الموضوع" : "Subject",
+        FormNumber = isRtl ? "رقم التواصل" : "Number",
+        FormMessage = isRtl ? "رسالتك" : "Message",
+        BreakLabel = isRtl ? "إجازة" : "Break",
+        NoCalendar = isRtl ? "لا يوجد تقويم تدريبي مفعل حالياً." : "No active training calendar available.",
+        NoteLabel = isRtl ? "ملاحظة" : "Note",
+        LinksTitle = isRtl ? "روابط مهمة" : "Important Links",
+        LinksEmpty = isRtl ? "لا توجد روابط متاحة حالياً" : "No links available yet.",
+        TodayLabel = isRtl ? $"تاريخ اليوم: {todayLabel}" : $"Today: {todayLabel}"
+    };
+
+    Func<int, string> weekLabel = index => isRtl ? $"الأسبوع {index}" : $"Week {index}";
+}
+<!DOCTYPE html>
+<html class="no-js @(isRtl ? "rtl" : "")" lang="@(isRtl ? "ar" : "en")" dir="@(isRtl ? "rtl" : "ltr")">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>@ViewBag.Title</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/css/bootstrap-5.0.0-alpha-2.min.css" />
+    <link rel="stylesheet" href="~/assets/css/LineIcons.2.0.css" />
+    <link rel="stylesheet" href="~/assets/css/animate.css" />
+    <link rel="stylesheet" href="~/assets/css/main.css" />
+    <style>
+        body, button, input, select, textarea {
+            font-family: 'Tajawal', sans-serif;
+        }
+        body.rtl { direction: rtl; text-align: right; }
+        body.rtl .navbar-nav { margin-left: 0; margin-right: auto; }
+        .lang-switch { display: inline-flex; align-items: center; gap: 10px; margin-left: 20px; }
+        .lang-switch a { font-weight: 700; text-decoration: none; color: #0b84f3; }
+        .lang-switch a.active { color: #111; }
+        .navbar-nav > li > a { font-weight: 800; color: #0b1f33; }
+        .navbar-nav > li > a:hover { color: #0b84f3; }
+        .nav-login { margin-left: 20px; }
+        body.rtl .nav-login { margin-left: 0; margin-right: 20px; }
+        .nav-login .login-btn { display: inline-flex; align-items: center; padding: 8px 14px; background: #0b84f3; color: #fff !important; border-radius: 10px; font-weight: 800; box-shadow: 0 10px 20px rgba(11,132,243,0.18); text-decoration: none; }
+        .nav-login .login-btn:hover { background: #096fc9; }
+        .calendar-card { background: linear-gradient(135deg, #f9fbff, #eef2fb); border: 1px solid #e3e8f0; border-radius: 14px; box-shadow: 0 12px 30px rgba(12, 58, 117, 0.08); transition: transform 0.2s ease, box-shadow 0.2s ease; height: 100%; display: flex; flex-direction: column; }
+        .calendar-card:hover { transform: translateY(-6px); box-shadow: 0 18px 36px rgba(12, 58, 117, 0.12); }
+        .calendar-card .content { flex: 1; display: flex; flex-direction: column; }
+        .equal-cards > [class*="col"] { display: flex; }
+        .equal-cards .calendar-card { width: 100%; }
+        .calendar-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 12px; }
+        .week-pill { display: inline-flex; align-items: center; padding: 6px 12px; background: #0b84f3; color: #fff; border-radius: 999px; font-weight: 700; font-size: 13px; }
+        .week-range { font-size: 13px; color: #4a5568; font-weight: 600; white-space: nowrap; }
+        .week-days { list-style: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+        .week-days li { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #fff; border: 1px solid #e3e8f0; border-radius: 10px; font-size: 14px; }
+        .week-days li.today { background: #f0f8ff; border-color: #0b84f3; box-shadow: 0 0 0 3px rgba(11,132,243,0.15); }
+        .week-days .day-name { font-weight: 700; color: #1f2937; }
+        .week-days .day-date { color: #4a5568; font-weight: 600; position: relative; }
+        .week-days .note-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #f97316; margin-left: 8px; border: 1px solid #e2e8f0; box-shadow: 0 0 0 4px #fff; }
+        .today-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; background: linear-gradient(135deg, #0b84f3, #3ba9ff); color: #fff; border-radius: 999px; font-size: 12px; margin-top: 8px; font-weight: 700; box-shadow: 0 8px 18px rgba(11,132,243,0.18); }
+        .note-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; background: #fff4e5; color: #b45309; border: 1px solid #f2c97d; border-radius: 8px; font-size: 12px; margin-top: 8px; }
+        .break-card { background: #fff; border: 1px dashed #e3e8f0; border-radius: 12px; padding: 16px; box-shadow: 0 8px 20px rgba(12, 58, 117, 0.08); }
+        .break-title { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: #0b84f3; }
+        .break-dates { margin-top: 6px; color: #4a5568; font-weight: 600; }
+        .link-out { color: #0b84f3; font-weight: 600; word-break: break-all; }
+        .link-chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 10px; background: #eef2fb; border-radius: 12px; border: 1px solid #d7dded; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+        .link-chip:hover { transform: translateY(-2px); box-shadow: 0 8px 14px rgba(12,58,117,0.1); }
+        .link-chip i { color: #0b84f3; }
+        .primary-title { font-weight: 800; letter-spacing: -0.5px; position: relative; display: inline-block; color: #0b84f3; }
+        .title-accent { width: 100%; height: 3px; background: linear-gradient(90deg, rgba(11,132,243,0), #0b84f3, #3ba9ff, #0b84f3, rgba(11,132,243,0)); border-radius: 12px; margin: 14px auto 8px; box-shadow: none; }
+        .today-inline { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; background: linear-gradient(135deg, #f0f7ff, #e6f2ff); color: #0b84f3; border-radius: 16px; font-weight: 800; box-shadow: 0 10px 22px rgba(11,132,243,0.12); border: 1px solid #d6e8ff; }
+        .today-inline i { color: #0b84f3; font-size: 16px; }
+    </style>
+</head>
+<body class="@(isRtl ? "rtl" : "")">
+    <!-- preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="ytp-spinner">
+                <div class="ytp-spinner-container">
+                    <div class="ytp-spinner-rotator">
+                        <div class="ytp-spinner-left">
+                            <div class="ytp-spinner-circle"></div>
+                        </div>
+                        <div class="ytp-spinner-right">
+                            <div class="ytp-spinner-circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header -->
+    <header class="header">
+        <div class="navbar-area">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-12">
+                        <nav class="navbar navbar-expand-lg">
+                            <a class="navbar-brand" href="~/">
+                                <img src="~/assets/img/logo/logo.svg" alt="Logo" />
+                            </a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                                <ul id="nav" class="navbar-nav @(isRtl ? "" : "ml-auto")">
+                                    <li class="nav-item"><a class="page-scroll" href="#home">@(isRtl ? "الرئيسية" : "Home")</a></li>
+                                    <li class="nav-item"><a class="page-scroll" href="#features">@(isRtl ? "التقويم التدريبي" : "Training Calendar")</a></li>
+                                    <li class="nav-item"><a class="page-scroll" href="#about">@(isRtl ? "روابط مهمة" : "Important Links")</a></li>
+                                    <li class="nav-item"><a class="page-scroll" href="#pricing">@(isRtl ? "الأسعار" : "Pricing")</a></li>
+                                    <li class="nav-item"><a class="page-scroll" href="#contact">@(isRtl ? "تواصل" : "Contact")</a></li>
+                                </ul>
+                                <div class="nav-login">
+                                    <a href="~/Account/Login" class="login-btn">@(isRtl ? "تسجيل الدخول" : "Sign In")</a>
+                                </div>
+                                <div class="lang-switch">
+                                    <a class="@(isRtl ? "" : "active")" href="~/Public/Portal?lang=en">EN</a>
+                                    <span>|</span>
+                                    <a class="@(isRtl ? "active" : "")" href="~/Public/Portal?lang=ar">AR</a>
+                                </div>
+                            </div>
+                        </nav>
+        </div>
+</header>
+    <!-- hero -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-7">
+                    <div class="hero-content">
+                        <h1 class="wow fadeInUp" data-wow-delay=".2s">@((isRtl ? "نظام الجودة الإلكتروني قدير" : "Qadeer e-Quality System"))</h1>
+                        <p class="wow fadeInUp" data-wow-delay=".4s">
+                            @text.HeroSubtitle
+                        </p>
+                        <a href="~/Account/Login" class="main-btn btn-hover wow fadeInUp" data-wow-delay=".6s">@text.HeroCta</a>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="hero-img wow fadeInUp" data-wow-delay=".5s">
+                        <img src="~/assets/img/hero/hero-img.svg" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="service-section pt-150">
+        <div class="container">
+                        <h1 class="wow fadeInUp" data-wow-delay=".2s">@(isRtl ? "نظام الجودة الإلكتروني قدير" : "Qadeer e-Quality System")</h1>
+                <div class="col-lg-10">
+                    <div class="section-title text-center">
+                        <h1 class="mb-20 wow fadeInUp primary-title" data-wow-delay=".2s">@text.CalendarTitle</h1>
+                        <div class="title-accent wow fadeInUp" data-wow-delay=".25s"></div>
+                        <div class="wow fadeInUp mt-3 today-inline" data-wow-delay=".3s">
+                            <i class="lni lni-calendar"></i>
+                            <span>@text.TodayLabel</span>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(text.CalendarSubtitle))
+                        {
+                            <p class="mb-40 wow fadeInUp" data-wow-delay=".4s">@text.CalendarSubtitle</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @if (Model?.HasCalendar ?? false)
+            {
+                <div class="row equal-cards">
+                    @foreach (var week in Model.Weeks)
+                    {
+                        var weekStart = week.Days.FirstOrDefault()?.Date ?? DateTime.MinValue;
+                        var weekEnd = week.Days.LastOrDefault()?.Date ?? weekStart;
+                        var weekRange = $"{weekStart.ToString("dd/MM", culture)} - {weekEnd.ToString("dd/MM/yyyy", culture)}";
+                        <div class="col-xl-4 col-md-6">
+                            <div class="single-service calendar-card">
+                                <div class="icon"><i class="lni lni-calendar"></i></div>
+                                <div class="content">
+                                    <div class="calendar-meta">
+                                        <span class="week-pill">@weekLabel(week.WeekNumber)</span>
+                                        <span class="week-range">@weekRange</span>
+                                    </div>
+                                    <ul class="week-days">
+                                        @foreach (var day in week.Days)
+                                        {
+                                            var dayName = day.Date.ToString("dddd", culture);
+                                            var dayDate = day.Date.ToString("dd/MM/yyyy", culture);
+                                            var noteLabel = day.NoteTitle ?? day.NoteText ?? "";
+                                            var isToday = day.Date.Date == DateTime.Today;
+                                            <li class="@(string.IsNullOrWhiteSpace(noteLabel) ? "" : "has-note") @(isToday ? "today" : "")">
+                                                <span class="day-name">@dayName</span>
+                                                <span class="day-date">
+                                                    @dayDate
+                                                    @if (!string.IsNullOrWhiteSpace(noteLabel))
+                                                    {
+                                                        <span class="note-dot" title="@noteLabel"></span>
+                                                    }
+                                                </span>
+                                            </li>
+                                            @if (isToday)
+                                            {
+                                                <div class="today-badge">
+                                                    <i class="lni lni-calendar"></i>
+                                                    <span>@text.TodayLabel</span>
+                                                </div>
+                                            }
+                                            if (!string.IsNullOrWhiteSpace(noteLabel))
+                                            {
+                                                <div class="note-badge">
+                                                    <i class="lni lni-flag"></i>
+                                                    <span>@text.NoteLabel: @noteLabel</span>
+                                                </div>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                @if (Model.Breaks.Any())
+                {
+                    <div class="row pt-60">
+                        <div class="col-12">
+                            <h4 class="mb-20">@text.BreakLabel</h4>
+                        </div>
+                        @foreach (var br in Model.Breaks)
+                        {
+                            var range = $"{br.StartDate.ToString("dd/MM/yyyy", culture)} - {br.EndDate.ToString("dd/MM/yyyy", culture)}";
+                            <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="break-card">
+                                    <div class="break-title"><i class="lni lni-plane"></i><span>@br.Title</span></div>
+                                    <div class="break-dates">@range</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="single-service calendar-card text-center" style="padding: 24px;">
+                            <div class="content">
+                                <h4>@text.NoCalendar</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section id="about" class="about-section pt-150">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="section-title text-center" style="margin-bottom: 32px;">
+                        <h1 class="mb-20 wow fadeInUp primary-title" data-wow-delay=".2s">@text.LinksTitle</h1>
+                        <div class="title-accent wow fadeInUp" data-wow-delay=".25s"></div>
+                        @if (!string.IsNullOrWhiteSpace(text.AboutSubtitle))
+                        {
+                            <p class="mb-40 wow fadeInUp" data-wow-delay=".4s">@text.AboutSubtitle</p>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row equal-cards">
+                @foreach (var linkSection in Model.LinkSections)
+                {
+                    <div class="col-lg-4 col-md-6">
+                        <div class="single-service calendar-card">
+                            <div class="content">
+                                <div class="calendar-meta">
+                                    <span class="week-pill"><i class="lni lni-link"></i> @linkSection.Title</span>
+                                </div>
+                                <ul class="week-days">
+                                    @foreach (var link in linkSection.Links)
+                                    {
+                                        <li>
+                                            <span class="day-name">@link.Title</span>
+                                            <span class="day-date">
+                                                <a href="@link.Url" target="_blank" rel="noopener" class="link-chip">
+                                                    <i class="lni lni-link"></i>
+                                                    <span>@(isRtl ? "فتح الرابط" : "Open link")</span>
+                                                </a>
+                                            </span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (!Model.LinkSections.Any())
+                {
+                    <div class="col-12">
+                        <div class="single-service calendar-card text-center" style="padding: 24px;">
+                            <div class="content">
+                                <h4>@text.LinksEmpty</h4>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="pricing-section pt-130">
+        <div class="container">
+            <div class="row align-items-end">
+                <div class="col-lg-7 col-xl-5">
+                    <div class="section-title mb-60">
+                        <h1 class="mb-35 wow fadeInUp" data-wow-delay=".2s">@text.PricingTitle</h1>
+                        <p class="wow fadeInUp" data-wow-delay=".4s">@text.PricingSubtitle</p>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-7">
+                    <ul class="nav nav-pills pricing-tab mb-60" id="pills-tab" role="tablist">
+                        <li role="presentation">
+                            <a class="pricing-tab-link active" id="pills-monthly-tab" data-toggle="pill" href="#pills-monthly" role="tab" aria-controls="pills-monthly" aria-selected="true">
+                                @text.PricingMonthly
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a class="pricing-tab-link" id="pills-yearly-tab" data-toggle="pill" href="#pills-yearly" role="tab" aria-controls="pills-yearly" aria-selected="false">
+                                @text.PricingYearly
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-monthly" role="tabpanel" aria-labelledby="pills-monthly-tab">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-pricing">
+                                <div class="icon"><img src="~/assets/img/pricing/pricing-1.svg" alt=""></div>
+                                <h3 class="package-name">Startup</h3>
+                                <span class="price">$13.00</span>
+                                <ul>
+                                    <li>Extra features</li>
+                                    <li>Lifetime free support</li>
+                                    <li>Upgrade options</li>
+                                    <li>Full access</li>
+                                </ul>
+                                <a href="#" class="main-btn border-btn btn-hover">@text.PricingCta</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-pricing">
+                                <div class="icon"><img src="~/assets/img/pricing/pricing-2.svg" alt=""></div>
+                                <h3 class="package-name">Standard</h3>
+                                <span class="price">$53.00</span>
+                                <ul>
+                                    <li>Extra features</li>
+                                    <li>Lifetime free support</li>
+                                    <li>Upgrade options</li>
+                                    <li>Full access</li>
+                                </ul>
+                                <a href="#" class="main-btn btn-hover">@text.PricingCta</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-pricing">
+                                <div class="icon"><img src="~/assets/img/pricing/pricing-3.svg" alt=""></div>
+                                <h3 class="package-name">Premium</h3>
+                                <span class="price">$93.00</span>
+                                <ul>
+                                    <li>Extra features</li>
+                                    <li>Lifetime free support</li>
+                                    <li>Upgrade options</li>
+                                    <li>Full access</li>
+                                </ul>
+                                <a href="#" class="main-btn border-btn btn-hover">@text.PricingCta</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-yearly" role="tabpanel" aria-labelledby="pills-yearly-tab">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-pricing">
+                                <div class="icon"><img src="~/assets/img/pricing/pricing-1.svg" alt=""></div>
+                                <h3 class="package-name">Startup</h3>
+                                <span class="price">$130.00</span>
+                                <ul>
+                                    <li>Extra features</li>
+                                    <li>Lifetime free support</li>
+                                    <li>Upgrade options</li>
+                                    <li>Full access</li>
+                                </ul>
+                                <a href="#" class="main-btn border-btn btn-hover">@text.PricingCta</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-pricing">
+                                <div class="icon"><img src="~/assets/img/pricing/pricing-2.svg" alt=""></div>
+                                <h3 class="package-name">Standard</h3>
+                                <span class="price">$530.00</span>
+                                <ul>
+                                    <li>Extra features</li>
+                                    <li>Lifetime free support</li>
+                                    <li>Upgrade options</li>
+                                    <li>Full access</li>
+                                </ul>
+                                <a href="#" class="main-btn btn-hover">@text.PricingCta</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-pricing">
+                                <div class="icon"><img src="~/assets/img/pricing/pricing-3.svg" alt=""></div>
+                                <h3 class="package-name">Premium</h3>
+                                <span class="price">$930.00</span>
+                                <ul>
+                                    <li>Extra features</li>
+                                    <li>Lifetime free support</li>
+                                    <li>Upgrade options</li>
+                                    <li>Full access</li>
+                                </ul>
+                                <a href="#" class="main-btn border-btn btn-hover">@text.PricingCta</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section pt-130">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-xl-5">
+                    <div class="section-title text-center mb-60">
+                        <h1 class="mb-25 wow fadeInUp" data-wow-delay=".2s">@text.ContactTitle</h1>
+                        <p class="wow fadeInUp" data-wow-delay=".4s">@text.ContactSubtitle</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="contact-wrapper wow fadeInUp" data-wow-delay=".2s">
+                        <form action="#" method="POST" id="contact-form" class="contact-form">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="single-form"><input type="text" name="name" id="name" class="form-input" placeholder="@text.FormName"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="single-form"><input type="email" name="email" id="email" class="form-input" placeholder="@text.FormEmail"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="single-form"><input type="text" name="subject" id="subject" class="form-input" placeholder="@text.FormSubject"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="single-form"><input type="text" name="number" id="number" class="form-input" placeholder="@text.FormNumber"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="single-form"><textarea name="message" id="message" class="form-input" rows="7" placeholder="@text.FormMessage"></textarea></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="submit-btn"><button class="main-btn btn-hover" type="submit">@text.ContactButton</button></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="contact-img wow fadeInUp" data-wow-delay=".5s">
+                        <img src="~/assets/img/contact/contact-img.svg" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer mt-150 pt-90">
+        <div class="container">
+            <div class="subscribe-wrapper">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6 col-lg-9">
+                        <div class="section-title text-center mb-45">
+                            <h1 class="mb-25 text-white wow fadeInUp" data-wow-delay=".2s">@text.FooterTitle</h1>
+                            <p class="text-white wow fadeInUp" data-wow-delay=".4s">@text.FooterSubtitle</p>
+                        </div>
+                        <form action="#" class="subscribe-form wow fadeInUp" data-wow-delay=".6s">
+                            <input type="email" name="subs-email" id="subs-email" placeholder="@text.FormEmail">
+                            <button type="submit" class="main-btn btn-hover">@text.FooterButton</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" class="scroll-top btn-hover"><i class="lni lni-chevron-up"></i></a>
+
+    <script src="~/assets/js/bootstrap.5.0.0.alpha-2-min.js"></script>
+    <script src="~/assets/js/count-up.min.js"></script>
+    <script src="~/assets/js/wow.min.js"></script>
+    <script src="~/assets/js/main.js"></script>
+</body>
+</html>

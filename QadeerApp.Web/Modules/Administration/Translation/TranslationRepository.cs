@@ -2,7 +2,6 @@ using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
 using Serenity.Localization;
 
 namespace QadeerApp.Administration.Repositories;
@@ -31,7 +30,7 @@ public class TranslationRepository(IRequestContext context, IWebHostEnvironment 
         var textsFilePath = GetUserTextsFilePath(HostEnvironment, targetLanguageID);
         if (File.Exists(textsFilePath))
         {
-            var json = JSON.Parse<Dictionary<string, JToken>>(File.ReadAllText(textsFilePath));
+            var json = JSON.Parse<Dictionary<string, object>>(File.ReadAllText(textsFilePath));
             JsonLocalTextRegistration.ProcessNestedDictionary(json, "", customTranslations);
             foreach (var key in customTranslations.Keys)
                 availableKeys.Add(key);

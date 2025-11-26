@@ -2,8 +2,11 @@ namespace QadeerApp.Administration;
 
 [ConnectionKey("Default"), Module("Administration"), TableName("Languages")]
 [DisplayName("Languages"), InstanceName("Language")]
-[ReadPermission(PermissionKeys.Translation)]
-[ModifyPermission(PermissionKeys.Translation)]
+[ReadPermission(PermissionKeys.Language.View)]
+[ModifyPermission(PermissionKeys.Language.Update)]
+[InsertPermission(PermissionKeys.Language.Insert)]
+[UpdatePermission(PermissionKeys.Language.Update)]
+[DeletePermission(PermissionKeys.Language.Delete)]
 [LookupScript(Permission = "*")]
 public sealed class LanguageRow : Row<LanguageRow.RowFields>, IIdRow, INameRow
 {

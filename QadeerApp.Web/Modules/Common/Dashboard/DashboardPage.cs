@@ -1,12 +1,18 @@
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 namespace QadeerApp.Common.Pages;
 
 [Route("Dashboard/[action]")]
 public class DashboardPage : Controller
 {
-    [PageAuthorize, HttpGet, Route("~/")]
+    [AllowAnonymous, HttpGet, Route("~/")]
     public ActionResult Index()
     {
-        return View(MVC.Views.Common.Dashboard.DashboardIndex, new DashboardPageModel());
+        if (User?.Identity?.IsAuthenticated == true)
+            return View(MVC.Views.Common.Dashboard.DashboardIndex, new DashboardPageModel());
+
+        return Redirect("~/Public/Portal");
     }
 }

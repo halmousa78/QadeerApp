@@ -13,6 +13,9 @@ public class EmployeeCvSaveHandler(IRequestContext context)
     private static readonly Regex ExtensionRegex = new("^\\d{4}$");
 
     private bool CanManageAll =>
+        Permissions.HasPermission(CvPermissionKeys.EmployeeCv.Insert) ||
+        Permissions.HasPermission(CvPermissionKeys.EmployeeCv.Update) ||
+        Permissions.HasPermission(CvPermissionKeys.EmployeeCv.Delete) ||
         Permissions.HasPermission(CvPermissionKeys.Manage) ||
         Permissions.HasPermission(CvPermissionKeys.Report) ||
         Permissions.HasPermission(PermissionKeys.Security);

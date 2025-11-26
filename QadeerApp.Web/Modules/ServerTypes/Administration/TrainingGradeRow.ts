@@ -13,6 +13,8 @@ export interface TrainingGradeRow {
     Department?: string;
     TrainingLevel?: string;
     TrainingTerm?: string;
+    RegistrationStatus?: string;
+    TraineeStatus?: string;
     IsActive?: number;
     InsertUserId?: number;
     InsertDate?: string;
@@ -25,10 +27,10 @@ export abstract class TrainingGradeRow {
     static readonly isActiveProperty = 'IsActive';
     static readonly nameProperty = 'CourseName';
     static readonly localTextPrefix = 'Administration.TrainingGrade';
-    static readonly deletePermission = 'Administration:TrainingGrades';
-    static readonly insertPermission = 'Administration:TrainingGrades';
-    static readonly readPermission = 'Administration:TrainingGrades';
-    static readonly updatePermission = 'Administration:TrainingGrades';
+    static readonly deletePermission = 'Administration:TrainingGrades:Delete';
+    static readonly insertPermission = 'Administration:TrainingGrades:Insert';
+    static readonly readPermission = 'Administration:TrainingGrades:View';
+    static readonly updatePermission = 'Administration:TrainingGrades:Update';
 
     static readonly Fields = fieldsProxy<TrainingGradeRow>();
 }

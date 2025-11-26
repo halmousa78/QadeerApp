@@ -9,6 +9,7 @@ export interface UserRow {
     DisplayName?: string;
     Email?: string;
     UserImage?: string;
+    EmployeeNumber?: string;
     LastDirectoryUpdate?: string;
     IsActive?: number;
     DepartmentId?: number;
@@ -35,10 +36,10 @@ export abstract class UserRow {
     static getLookup() { return getLookup<UserRow>('Administration.User') }
     static async getLookupAsync() { return getLookupAsync<UserRow>('Administration.User') }
 
-    static readonly deletePermission = 'Administration:Security';
-    static readonly insertPermission = 'Administration:Security';
-    static readonly readPermission = 'Administration:Security';
-    static readonly updatePermission = 'Administration:Security';
+    static readonly deletePermission = 'Administration:Security:Users:Delete';
+    static readonly insertPermission = 'Administration:Security:Users:Insert';
+    static readonly readPermission = 'Administration:Security:Users:View';
+    static readonly updatePermission = 'Administration:Security:Users:Update';
 
     static readonly Fields = fieldsProxy<UserRow>();
 }

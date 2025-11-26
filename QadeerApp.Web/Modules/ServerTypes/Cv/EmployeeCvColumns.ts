@@ -5,6 +5,7 @@ import { EnglishLevel } from "./EnglishLevel";
 
 export interface EmployeeCvColumns {
     UserDisplayName: Column<EmployeeCvRow>;
+    EmployeeNumber: Column<EmployeeCvRow>;
     Mobile: Column<EmployeeCvRow>;
     EnglishLevel: Column<EmployeeCvRow>;
     ExtensionNumber: Column<EmployeeCvRow>;

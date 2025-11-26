@@ -21,7 +21,10 @@ public class EmployeeCvDeleteHandler(IRequestContext context)
 
     private bool HasFullAccess()
     {
-        return Permissions.HasPermission(CvPermissionKeys.Manage) ||
+        return Permissions.HasPermission(CvPermissionKeys.EmployeeCv.Delete) ||
+            Permissions.HasPermission(CvPermissionKeys.EmployeeCv.Update) ||
+            Permissions.HasPermission(CvPermissionKeys.EmployeeCv.Insert) ||
+            Permissions.HasPermission(CvPermissionKeys.Manage) ||
             Permissions.HasPermission(CvPermissionKeys.Report) ||
             Permissions.HasPermission(PermissionKeys.Security);
     }

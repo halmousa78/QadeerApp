@@ -55,7 +55,12 @@ class LoginPanel extends PropertyPanel<LoginRequest, any> {
     }
 
     protected redirectToReturnUrl() {
-        window.location.href = getReturnUrl({ purpose: "login" });
+        const url = getReturnUrl({ purpose: "login" });
+        const fallback = resolveUrl("~/");
+        const target = !url || url.toLowerCase().includes("/public/portal")
+            ? fallback
+            : url;
+        window.location.href = target;
     }
 
     protected override renderContents() {

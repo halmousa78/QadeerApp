@@ -7,12 +7,17 @@ public static partial class ESM
     public const string EmployeeCvStatusPage = "~/esm/Modules/Cv/EmployeeCvStatus/EmployeeCvStatusPage.js";
     public const string LanguagePage = "~/esm/Modules/Administration/Language/LanguagePage.js";
     public const string LoginPage = "~/esm/Modules/Membership/Account/Login/LoginPage.js";
+    public const string PortalLinkPage = "~/esm/Modules/Administration/PortalLink/PortalLinkPage.js";
     public const string RolePage = "~/esm/Modules/Administration/Role/RolePage.js";
     public const string ScriptInit = "~/esm/Modules/Common/ScriptInit.js";
     public const string SignUpPage = "~/esm/Modules/Membership/Account/SignUp/SignUpPage.js";
     public const string SpecializationPage = "~/esm/Modules/Administration/Specialization/SpecializationPage.js";
+    public const string TrainingCalendarBreakPage = "~/esm/Modules/Administration/TrainingCalendarBreak/TrainingCalendarBreakPage.js";
+    public const string TrainingCalendarNotePage = "~/esm/Modules/Administration/TrainingCalendarNote/TrainingCalendarNotePage.js";
+    public const string TrainingCalendarPage = "~/esm/Modules/Administration/TrainingCalendar/TrainingCalendarPage.js";
     public const string TrainingCoursePage = "~/esm/Modules/Administration/TrainingCourse/TrainingCoursePage.js";
     public const string TrainingGradePage = "~/esm/Modules/Administration/TrainingGrade/TrainingGradePage.js";
+    public const string TrainingGradePivotDeniedPage = "~/esm/Modules/Administration/TrainingGradePivot/TrainingGradePivotDeniedPage.js";
     public const string TrainingGradePivotPage = "~/esm/Modules/Administration/TrainingGradePivot/TrainingGradePivotPage.js";
     public const string TrainingTermPage = "~/esm/Modules/Administration/TrainingTerm/TrainingTermPage.js";
     public const string TranslationPage = "~/esm/Modules/Administration/Translation/TranslationPage.js";
@@ -32,6 +37,11 @@ public static partial class ESM
                 public const string LanguagePage = "~/esm/Modules/Administration/Language/LanguagePage.js";
             }
 
+            public static partial class PortalLink
+            {
+                public const string PortalLinkPage = "~/esm/Modules/Administration/PortalLink/PortalLinkPage.js";
+            }
+
             public static partial class Role
             {
                 public const string RolePage = "~/esm/Modules/Administration/Role/RolePage.js";
@@ -40,6 +50,21 @@ public static partial class ESM
             public static partial class Specialization
             {
                 public const string SpecializationPage = "~/esm/Modules/Administration/Specialization/SpecializationPage.js";
+            }
+
+            public static partial class TrainingCalendar
+            {
+                public const string TrainingCalendarPage = "~/esm/Modules/Administration/TrainingCalendar/TrainingCalendarPage.js";
+            }
+
+            public static partial class TrainingCalendarBreak
+            {
+                public const string TrainingCalendarBreakPage = "~/esm/Modules/Administration/TrainingCalendarBreak/TrainingCalendarBreakPage.js";
+            }
+
+            public static partial class TrainingCalendarNote
+            {
+                public const string TrainingCalendarNotePage = "~/esm/Modules/Administration/TrainingCalendarNote/TrainingCalendarNotePage.js";
             }
 
             public static partial class TrainingCourse
@@ -54,6 +79,7 @@ public static partial class ESM
 
             public static partial class TrainingGradePivot
             {
+                public const string TrainingGradePivotDeniedPage = "~/esm/Modules/Administration/TrainingGradePivot/TrainingGradePivotDeniedPage.js";
                 public const string TrainingGradePivotPage = "~/esm/Modules/Administration/TrainingGradePivot/TrainingGradePivotPage.js";
             }
 

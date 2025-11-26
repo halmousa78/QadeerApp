@@ -2,8 +2,11 @@ namespace QadeerApp.Administration;
 
 [ConnectionKey("Default"), Module("Administration"), TableName("Specializations")]
 [DisplayName("Specializations"), InstanceName("Specialization")]
-[ReadPermission(PermissionKeys.Specializations)]
-[ModifyPermission(PermissionKeys.Specializations)]
+[ReadPermission(PermissionKeys.Specialization.View)]
+[ModifyPermission(PermissionKeys.Specialization.Update)]
+[InsertPermission(PermissionKeys.Specialization.Insert)]
+[UpdatePermission(PermissionKeys.Specialization.Update)]
+[DeletePermission(PermissionKeys.Specialization.Delete)]
 [LookupScript(Permission = "*")]
 public sealed class SpecializationRow : Serenity.Extensions.Entities.LoggingRow<SpecializationRow.RowFields>, IIdRow, INameRow, IIsActiveRow, IIsActiveDeletedRow, IDeleteLogRow
 {

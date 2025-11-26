@@ -23,10 +23,10 @@ export abstract class TrainingTermRow {
     static getLookup() { return getLookup<TrainingTermRow>('Administration.TrainingTerm') }
     static async getLookupAsync() { return getLookupAsync<TrainingTermRow>('Administration.TrainingTerm') }
 
-    static readonly deletePermission = 'Administration:TrainingTerms';
-    static readonly insertPermission = 'Administration:TrainingTerms';
-    static readonly readPermission = 'Administration:TrainingTerms';
-    static readonly updatePermission = 'Administration:TrainingTerms';
+    static readonly deletePermission = 'Administration:TrainingTerms:Delete';
+    static readonly insertPermission = 'Administration:TrainingTerms:Insert';
+    static readonly readPermission = 'Administration:TrainingTerms:View';
+    static readonly updatePermission = 'Administration:TrainingTerms:Update';
 
     static readonly Fields = fieldsProxy<TrainingTermRow>();
 }

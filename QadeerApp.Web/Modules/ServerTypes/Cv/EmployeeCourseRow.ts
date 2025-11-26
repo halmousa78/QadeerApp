@@ -1,4 +1,4 @@
-import { fieldsProxy } from "@serenity-is/corelib";
+﻿import { fieldsProxy } from "@serenity-is/corelib";
 
 export interface EmployeeCourseRow {
     EmployeeCourseId?: number;
@@ -15,10 +15,10 @@ export abstract class EmployeeCourseRow {
     static readonly idProperty = 'EmployeeCourseId';
     static readonly nameProperty = 'Name';
     static readonly localTextPrefix = 'Cv.EmployeeCourse';
-    static readonly deletePermission = '*';
-    static readonly insertPermission = '*';
-    static readonly readPermission = '*';
-    static readonly updatePermission = '*';
+    static readonly deletePermission = 'Cv:EmployeeCourse:Delete';
+    static readonly insertPermission = 'Cv:EmployeeCourse:Insert';
+    static readonly readPermission = 'Cv:EmployeeCourse:View';
+    static readonly updatePermission = 'Cv:EmployeeCourse:Update';
 
     static readonly Fields = fieldsProxy<EmployeeCourseRow>();
 }

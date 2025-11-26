@@ -4,35 +4,39 @@ namespace QadeerApp.Cv.Forms;
 [BasedOnRow(typeof(EmployeeCvRow), CheckNames = true)]
 public class EmployeeCvForm
 {
-    [Tab("المعلومات الشخصية"), Category("المعلومات الشخصية")]
+    [Tab("Basic Info"), Category("Basic Info")]
     [Required(true)]
     public string Mobile { get; set; }
 
-    [Tab("المعلومات الشخصية"), Required(true)]
+    [Tab("Basic Info")]
+    [ReadOnly(true)]
+    public string EmployeeNumber { get; set; }
+
+    [Tab("Basic Info"), Required(true)]
     [EnumEditor]
     public EnglishLevel EnglishLevel { get; set; }
 
-    [Tab("المعلومات الشخصية"), TextAreaEditor(Rows = 2), Required(true)]
+    [Tab("Basic Info"), TextAreaEditor(Rows = 2), Required(true)]
     public string Address { get; set; }
 
-    [Tab("المعلومات الشخصية"), Required(true)]
+    [Tab("Basic Info"), Required(true)]
     public string ExtensionNumber { get; set; }
 
-    [Tab("المعلومات الشخصية"), Required(true)]
+    [Tab("Basic Info"), Required(true)]
     public string OfficeNumber { get; set; }
 
-    [Tab("المعلومات الشخصية"), Required(true)]
+    [Tab("Basic Info"), Required(true)]
     public string BuildingNumber { get; set; }
 
-    [Tab("المؤهلات")]
+    [Tab("Qualifications")]
     [EmployeeQualificationEditor]
     public List<EmployeeQualificationRow> Qualifications { get; set; }
 
-    [Tab("الخبرات")]
+    [Tab("Experiences")]
     [EmployeeExperienceEditor]
     public List<EmployeeExperienceRow> Experiences { get; set; }
 
-    [Tab("الدورات")]
+    [Tab("Courses")]
     [EmployeeCourseEditor]
     public List<EmployeeCourseRow> Courses { get; set; }
 }

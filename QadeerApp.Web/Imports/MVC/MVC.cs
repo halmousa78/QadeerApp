@@ -34,6 +34,13 @@ public static partial class Views
         }
     }
 
+    public static partial class Public
+    {
+        public const string Portal = "~/Views/Public/Portal.cshtml";
+        public const string Portal_backup_nav = "~/Views/Public/Portal_backup_nav.cshtml";
+        public const string Portal_restore2 = "~/Views/Public/Portal_restore2.cshtml";
+    }
+
     public static partial class Shared
     {
         public const string _Layout = "~/Views/Shared/_Layout.cshtml";

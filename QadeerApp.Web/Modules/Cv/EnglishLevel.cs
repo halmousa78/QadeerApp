@@ -3,12 +3,12 @@ namespace QadeerApp.Cv;
 [EnumKey("Cv.EnglishLevel")]
 public enum EnglishLevel
 {
-    [Description("ضعيف")]
+    [Description("Poor")]
     Weak = 1,
-    [Description("جيد")]
+    [Description("Good")]
     Good = 2,
-    [Description("جيد جدا")]
+    [Description("Very Good")]
     VeryGood = 3,
-    [Description("ممتاز")]
+    [Description("Excellent")]
     Excellent = 4
 }

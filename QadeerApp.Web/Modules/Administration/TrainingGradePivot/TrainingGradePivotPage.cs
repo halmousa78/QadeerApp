@@ -9,6 +9,6 @@ public class TrainingGradePivotPage : Controller
     public ActionResult Index()
     {
         return this.GridPage("@/Administration/TrainingGradePivot/TrainingGradePivotPage",
-            "إحصائية التقديرات");
+            "Training Grade Pivot");
     }
 }

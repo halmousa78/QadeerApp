@@ -25,10 +25,10 @@ export abstract class SpecializationRow {
     static getLookup() { return getLookup<SpecializationRow>('Administration.Specialization') }
     static async getLookupAsync() { return getLookupAsync<SpecializationRow>('Administration.Specialization') }
 
-    static readonly deletePermission = 'Administration:Specializations';
-    static readonly insertPermission = 'Administration:Specializations';
-    static readonly readPermission = 'Administration:Specializations';
-    static readonly updatePermission = 'Administration:Specializations';
+    static readonly deletePermission = 'Administration:Specializations:Delete';
+    static readonly insertPermission = 'Administration:Specializations:Insert';
+    static readonly readPermission = 'Administration:Specializations:View';
+    static readonly updatePermission = 'Administration:Specializations:Update';
 
     static readonly Fields = fieldsProxy<SpecializationRow>();
 }

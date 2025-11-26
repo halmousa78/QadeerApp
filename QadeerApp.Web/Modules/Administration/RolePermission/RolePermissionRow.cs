@@ -2,8 +2,11 @@ namespace QadeerApp.Administration;
 
 [ConnectionKey("Default"), Module("Administration"), TableName("RolePermissions")]
 [DisplayName("Role Permissions"), InstanceName("Role Permission")]
-[ReadPermission(PermissionKeys.Security)]
-[ModifyPermission(PermissionKeys.Security)]
+[ReadPermission(PermissionKeys.RolePermission.View)]
+[ModifyPermission(PermissionKeys.RolePermission.Update)]
+[InsertPermission(PermissionKeys.RolePermission.Insert)]
+[UpdatePermission(PermissionKeys.RolePermission.Update)]
+[DeletePermission(PermissionKeys.RolePermission.Delete)]
 public sealed class RolePermissionRow : Row<RolePermissionRow.RowFields>, IIdRow, INameRow, IRolePermissionRow
 {
     [DisplayName("Role Permission Id"), Identity, IdProperty]

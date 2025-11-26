@@ -2,8 +2,11 @@ namespace QadeerApp.Administration;
 
 [ConnectionKey("Default"), Module("Administration"), TableName("Departments")]
 [DisplayName("Departments"), InstanceName("Department")]
-[ReadPermission(PermissionKeys.Departments)]
-[ModifyPermission(PermissionKeys.Departments)]
+[ReadPermission(PermissionKeys.Department.View)]
+[ModifyPermission(PermissionKeys.Department.Update)]
+[InsertPermission(PermissionKeys.Department.Insert)]
+[UpdatePermission(PermissionKeys.Department.Update)]
+[DeletePermission(PermissionKeys.Department.Delete)]
 [LookupScript(Permission = "*")]
 public sealed class DepartmentRow : Serenity.Extensions.Entities.LoggingRow<DepartmentRow.RowFields>, IIdRow, INameRow, IIsActiveRow, IIsActiveDeletedRow, IDeleteLogRow
 {

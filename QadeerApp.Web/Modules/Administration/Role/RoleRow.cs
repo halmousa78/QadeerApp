@@ -2,8 +2,11 @@
 
 [ConnectionKey("Default"), Module("Administration"), TableName("Roles")]
 [DisplayName("Roles"), InstanceName("Role")]
-[ReadPermission(PermissionKeys.Security)]
-[ModifyPermission(PermissionKeys.Security)]
+[ReadPermission(PermissionKeys.Role.View)]
+[ModifyPermission(PermissionKeys.Role.Update)]
+[InsertPermission(PermissionKeys.Role.Insert)]
+[UpdatePermission(PermissionKeys.Role.Update)]
+[DeletePermission(PermissionKeys.Role.Delete)]
 [LookupScript]
 public sealed class RoleRow : Row<RoleRow.RowFields>, IIdRow, INameRow
 {

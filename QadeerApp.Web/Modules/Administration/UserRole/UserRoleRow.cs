@@ -2,8 +2,11 @@ namespace QadeerApp.Administration;
 
 [ConnectionKey("Default"), Module("Administration"), TableName("UserRoles")]
 [DisplayName("UserRoles"), InstanceName("UserRoles")]
-[ReadPermission(PermissionKeys.Security)]
-[ModifyPermission(PermissionKeys.Security)]
+[ReadPermission(PermissionKeys.UserRole.View)]
+[ModifyPermission(PermissionKeys.UserRole.Update)]
+[InsertPermission(PermissionKeys.UserRole.Insert)]
+[UpdatePermission(PermissionKeys.UserRole.Update)]
+[DeletePermission(PermissionKeys.UserRole.Delete)]
 [TwoLevelCached(typeof(UserPermissionRow))]
 public sealed class UserRoleRow : Row<UserRoleRow.RowFields>, IIdRow, IUserRoleRow
 {

@@ -8,5 +8,7 @@ export interface TrainingGradePivotRow {
     ScheduleType?: string;
     TrainerName?: string;
     TrainingLevel?: string;
+    RegistrationStatus?: string;
+    TraineeStatus?: string;
     IsActive?: number;
 }

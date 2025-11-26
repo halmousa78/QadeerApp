@@ -26,25 +26,13 @@ public class UserCultureProvider : RequestCultureProvider
         new(StringComparer.OrdinalIgnoreCase)
     {
         { "en", "en-US" },
-        { "zh", "zh-CN" },
-        { "vi", "vi-VN" },
-        { "fa", "fa-IR" }
+        { "ar", "ar-SA" }
     };
 
     private static List<CultureInfo> supportedCultures;
     private static readonly string[] supportedCultureIdentifiers = [
-        "de-DE",
         "en-US",
-        "en-GB",
-        "es-ES",
-        "fa-IR",
-        "it-IT",
-        "pt-PT",
-        "pt-BR",
-        "ru-RU",
-        "tr-TR",
-        "vi-VN",
-        "zh-CN"
+        "ar-SA"
     ];
 
     public static IList<CultureInfo> SupportedCultures

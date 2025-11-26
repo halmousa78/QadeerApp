@@ -15,10 +15,10 @@ export abstract class RoleRow {
     static getLookup() { return getLookup<RoleRow>('Administration.Role') }
     static async getLookupAsync() { return getLookupAsync<RoleRow>('Administration.Role') }
 
-    static readonly deletePermission = 'Administration:Security';
-    static readonly insertPermission = 'Administration:Security';
-    static readonly readPermission = 'Administration:Security';
-    static readonly updatePermission = 'Administration:Security';
+    static readonly deletePermission = 'Administration:Security:Roles:Delete';
+    static readonly insertPermission = 'Administration:Security:Roles:Insert';
+    static readonly readPermission = 'Administration:Security:Roles:View';
+    static readonly updatePermission = 'Administration:Security:Roles:Update';
 
     static readonly Fields = fieldsProxy<RoleRow>();
 }

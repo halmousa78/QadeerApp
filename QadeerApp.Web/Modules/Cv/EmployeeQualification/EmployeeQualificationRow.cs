@@ -1,21 +1,24 @@
 namespace QadeerApp.Cv;
 
 [ConnectionKey("Default"), Module("Cv"), TableName("EmployeeQualifications")]
-[DisplayName("مؤهلات الموظف"), InstanceName("مؤهل")]
-[ReadPermission("*")]
-[ModifyPermission("*")]
+[DisplayName("Employee Qualifications"), InstanceName("Qualification")]
+[ReadPermission(CvPermissionKeys.EmployeeQualification.View)]
+[ModifyPermission(CvPermissionKeys.EmployeeQualification.Update)]
+[InsertPermission(CvPermissionKeys.EmployeeQualification.Insert)]
+[UpdatePermission(CvPermissionKeys.EmployeeQualification.Update)]
+[DeletePermission(CvPermissionKeys.EmployeeQualification.Delete)]
 public sealed class EmployeeQualificationRow : Serenity.Extensions.Entities.LoggingRow<EmployeeQualificationRow.RowFields>, IIdRow, INameRow
 {
-    [DisplayName("رقم المؤهل"), Identity, IdProperty]
+    [DisplayName("Qualification Id"), Identity, IdProperty]
     public int? EmployeeQualificationId { get => fields.EmployeeQualificationId[this]; set => fields.EmployeeQualificationId[this] = value; }
 
-    [DisplayName("السيرة الذاتية"), NotNull, ForeignKey(typeof(EmployeeCvRow)), LeftJoin("cv"), Updatable(false)]
+    [DisplayName("Employee CV"), NotNull, ForeignKey(typeof(EmployeeCvRow)), LeftJoin("cv"), Updatable(false)]
     public int? EmployeeCvId { get => fields.EmployeeCvId[this]; set => fields.EmployeeCvId[this] = value; }
 
-    [DisplayName("اسم المؤهل"), Size(200), NotNull, QuickSearch, NameProperty]
+    [DisplayName("Qualification Name"), Size(200), NotNull, QuickSearch, NameProperty]
     public string Name { get => fields.Name[this]; set => fields.Name[this] = value; }
 
-    [DisplayName("اسم الموظف"), Expression("cv.[UserId]")]
+    [DisplayName("User Id"), Expression("cv.[UserId]")]
     public int? UserId { get => fields.UserId[this]; set => fields.UserId[this] = value; }
 
     public class RowFields : Serenity.Extensions.Entities.LoggingRowFields

@@ -6,6 +6,7 @@ import { EnglishLevel } from "./EnglishLevel";
 
 export interface EmployeeCvForm {
     Mobile: StringEditor;
+    EmployeeNumber: StringEditor;
     EnglishLevel: EnumEditor;
     Address: TextAreaEditor;
     ExtensionNumber: StringEditor;
@@ -35,6 +36,7 @@ export class EmployeeCvForm extends PrefixedContext {
 
             initFormType(EmployeeCvForm, [
                 'Mobile', w0,
+                'EmployeeNumber', w0,
                 'EnglishLevel', w1,
                 'Address', w2,
                 'ExtensionNumber', w0,

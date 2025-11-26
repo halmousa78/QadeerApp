@@ -98,7 +98,8 @@ export default () => {
     }
 
     function toArabicRows(items: TrainingGradePivotRow[]) {
-        return (items || []).map(x => ({
+        const filtered = (items || []).filter(x => (x.Grade ?? "").toString().trim() !== "");
+        return filtered.map(x => ({
             "الفصل التدريبي": x.TrainingTerm || "",
             "التقدير": x.Grade || "",
             "القسم": x.Department || "",
@@ -107,8 +108,7 @@ export default () => {
             "رقم المقرر": x.CourseCode || "",
             "نوع الجدولة": x.ScheduleType || "",
             "اسم المدرب": x.TrainerName || "",
-            "المستوى التدريبي": x.TrainingLevel || "",
-            "الحالة": x.IsActive === 1 ? "مفعل" : "غير مفعل"
+            "المستوى التدريبي": x.TrainingLevel || ""
         }));
     }
 

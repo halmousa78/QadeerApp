@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
+using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serenity.Data;
@@ -52,7 +55,7 @@ public class TrainingGradeEndpoint : ServiceEndpoint
             throw new ValidationError("NoFile", "file", "No CSV file was provided.");
 
         var response = new TrainingGradeImportResponse();
-        using var reader = new StreamReader(request.File.OpenReadStream(), Encoding.UTF8);
+        using var reader = new StreamReader(request.File.OpenReadStream(), Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
         var fileText = reader.ReadToEnd();
 
         if (string.IsNullOrWhiteSpace(fileText))
@@ -120,6 +123,8 @@ public class TrainingGradeEndpoint : ServiceEndpoint
                 Department = GetValue(cells, headerMap, HeaderDepartment),
                 TrainingLevel = GetValue(cells, headerMap, HeaderTrainingLevel),
                 TrainingTerm = GetValue(cells, headerMap, HeaderTrainingTerm),
+                RegistrationStatus = GetValue(cells, headerMap, HeaderRegistrationStatus),
+                TraineeStatus = GetValue(cells, headerMap, HeaderTraineeStatus),
                 IsActive = 1
             };
 
@@ -246,7 +251,10 @@ public class TrainingGradeEndpoint : ServiceEndpoint
             .Select(fld.CourseCode)
             .Select(fld.ScheduleType)
             .Select(fld.TrainerName)
+            .Select(fld.TrainerNumber)
             .Select(fld.TrainingLevel)
+            .Select(fld.RegistrationStatus)
+            .Select(fld.TraineeStatus)
             .Select(fld.IsActive);
 
         if (!string.IsNullOrWhiteSpace(request?.TrainingTerm))
@@ -255,12 +263,146 @@ public class TrainingGradeEndpoint : ServiceEndpoint
         if (request?.IsActive != null)
             query.Where(fld.IsActive == (request.IsActive.Value ? 1 : 0));
 
-        var rows = connection.Query<TrainingGradePivotRow>(query).ToList();
+        var access = GetUserAccessInfo(connection);
+        ApplyAccessFilter(query, fld, access);
+
+        var rows = SD.Query<TrainingGradePivotRow>(connection, query).ToList();
 
         return new TrainingGradePivotResponse
         {
             Items = rows
         };
+    }
+
+    private void ApplyAccessFilter(SqlQuery query, MyRow.RowFields fld, UserAccessInfo access)
+    {
+        if (access.FullAccess)
+            return;
+
+        // إذا كان المستخدم مدربًا نقتصر على سجلاته فقط بناءً على رقمه الوظيفي
+        if (!string.IsNullOrWhiteSpace(access.TrainerNumber))
+        {
+            query.Where(fld.TrainerNumber == access.TrainerNumber);
+            return;
+        }
+
+        BaseCriteria criteria = null;
+
+        if (access.Departments.Count > 0)
+            criteria = fld.Department.In(access.Departments);
+
+        if (access.Specializations.Count > 0)
+        {
+            var specCriteria = fld.Specialization.In(access.Specializations);
+            criteria = criteria is null ? specCriteria : criteria | specCriteria;
+        }
+
+        if (criteria is null)
+        {
+            // لا توجد أقسام/تخصصات مسموحة للمستخدم الحالي
+            query.Where(new Criteria("1") == 0);
+        }
+        else
+        {
+            query.Where(criteria);
+        }
+    }
+
+    private UserAccessInfo GetUserAccessInfo(IDbConnection connection)
+    {
+        var info = new UserAccessInfo();
+        var userId = GetCurrentUserId();
+        if (userId == null)
+        {
+            info.FullAccess = false;
+            return info;
+        }
+
+        var roleNames = SD.Query<string>(connection, @"
+                select r.RoleName
+                from UserRoles ur
+                join Roles r on r.RoleId = ur.RoleId
+                where ur.UserId = @UserId", new { UserId = userId.Value })
+            .Select(r => r?.Trim())
+            .Where(r => !string.IsNullOrEmpty(r))
+            .ToList();
+
+        if (roleNames.Any(IsFullAccessRole))
+        {
+            info.FullAccess = true;
+            return info;
+        }
+
+        // اعتبار أي دور يحتوي "مدرب" أو "trainer" كمدرب
+        info.TrainerNumber = roleNames.Any(IsTrainerRole)
+            ? SD.Query<string>(connection,
+                @"select EmployeeNumber from Users where UserId = @UserId",
+                new { UserId = userId.Value }).FirstOrDefault()
+            : null;
+
+        var userDeptSpec = SD.Query<(string DepartmentName, string SpecializationName)>(connection, @"
+                select d.Name as DepartmentName, s.Name as SpecializationName
+                from Users u
+                left join Departments d on d.DepartmentId = u.DepartmentId
+                left join Specializations s on s.SpecializationId = u.SpecializationId
+                where u.UserId = @UserId", new { UserId = userId.Value })
+            .FirstOrDefault();
+
+        if (!string.IsNullOrWhiteSpace(userDeptSpec.DepartmentName))
+            info.Departments.Add(userDeptSpec.DepartmentName);
+
+        if (!string.IsNullOrWhiteSpace(userDeptSpec.SpecializationName))
+            info.Specializations.Add(userDeptSpec.SpecializationName);
+
+        return info;
+    }
+
+    private static bool IsFullAccessRole(string roleName)
+    {
+        if (string.IsNullOrWhiteSpace(roleName))
+            return false;
+
+        var normalized = roleName.Trim().ToLowerInvariant();
+
+        if (FullAccessRoleNames.Contains(normalized))
+            return true;
+
+        // يسمح لكل من يحتوي اسمه على "وكيل" أو "dean" برؤية كل شيء
+        return normalized.Contains("وكيل") || normalized.Contains("vice dean") || normalized.Contains("dean");
+    }
+
+    private static bool IsTrainerRole(string roleName)
+    {
+        if (string.IsNullOrWhiteSpace(roleName))
+            return false;
+
+        var normalized = roleName.Trim().ToLowerInvariant();
+        return normalized.Contains("مدرب") || normalized.Contains("trainer");
+    }
+
+    private int? GetCurrentUserId()
+    {
+        var identifier = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return int.TryParse(identifier, out var id) ? id : null;
+    }
+
+    private static readonly HashSet<string> FullAccessRoleNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "system administrator",
+        "administrator",
+        "admin",
+        "مدير النظام",
+        "المدير",
+        "العميد",
+        "عميد"
+    };
+
+    private class UserAccessInfo
+    {
+        public bool FullAccess { get; set; }
+        public List<string> Departments { get; } = new();
+        public List<string> Specializations { get; } = new();
+        public string TrainerNumber { get; set; }
     }
 
     private static Dictionary<string, int> BuildHeaderIndex(IList<string> headers)
@@ -341,6 +483,8 @@ public class TrainingGradeEndpoint : ServiceEndpoint
     private const string HeaderDepartment = "القسم";
     private const string HeaderTrainingLevel = "المستوى التدريبي";
     private const string HeaderTrainingTerm = "الفصل التدريبي";
+    private const string HeaderRegistrationStatus = "حالة التسجيل";
+    private const string HeaderTraineeStatus = "حالة المتدرب";
 
     private static readonly string[] RequiredHeaders =
     {
