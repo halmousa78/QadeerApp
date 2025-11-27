@@ -9,6 +9,7 @@
     export const TrainingCalendars = "Administration:TrainingCalendars";
     export const PortalLinks = "Administration:PortalLinks";
     export const TrainingScheduleImports = "Administration:TrainingScheduleImports";
+    export const TrainingCourseFiles = "Administration:TrainingCourseFiles";
 
     export namespace Department {
         export const View = "Administration:Departments:View";
@@ -71,6 +72,13 @@
         export const Insert = "Administration:TrainingScheduleImports:Insert";
         export const Update = "Administration:TrainingScheduleImports:Update";
         export const Delete = "Administration:TrainingScheduleImports:Delete";
+    }
+
+    export namespace TrainingCourseFile {
+        export const View = "Administration:TrainingCourseFiles:View";
+        export const Insert = "Administration:TrainingCourseFiles:Insert";
+        export const Update = "Administration:TrainingCourseFiles:Update";
+        export const Delete = "Administration:TrainingCourseFiles:Delete";
     }
 
     export namespace User {

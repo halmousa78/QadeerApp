@@ -15,6 +15,8 @@ public static partial class ESM
     public const string TrainingCalendarBreakPage = "~/esm/Modules/Administration/TrainingCalendarBreak/TrainingCalendarBreakPage.js";
     public const string TrainingCalendarNotePage = "~/esm/Modules/Administration/TrainingCalendarNote/TrainingCalendarNotePage.js";
     public const string TrainingCalendarPage = "~/esm/Modules/Administration/TrainingCalendar/TrainingCalendarPage.js";
+    public const string TrainingCourseCoordinatorPage = "~/esm/Modules/Administration/TrainingCourseCoordinator/TrainingCourseCoordinatorPage.js";
+    public const string TrainingCourseFilePage = "~/esm/Modules/Administration/TrainingCourseFile/TrainingCourseFilePage.js";
     public const string TrainingCoursePage = "~/esm/Modules/Administration/TrainingCourse/TrainingCoursePage.js";
     public const string TrainingGradePage = "~/esm/Modules/Administration/TrainingGrade/TrainingGradePage.js";
     public const string TrainingGradePivotDeniedPage = "~/esm/Modules/Administration/TrainingGradePivot/TrainingGradePivotDeniedPage.js";
@@ -71,6 +73,16 @@ public static partial class ESM
             public static partial class TrainingCourse
             {
                 public const string TrainingCoursePage = "~/esm/Modules/Administration/TrainingCourse/TrainingCoursePage.js";
+            }
+
+            public static partial class TrainingCourseCoordinator
+            {
+                public const string TrainingCourseCoordinatorPage = "~/esm/Modules/Administration/TrainingCourseCoordinator/TrainingCourseCoordinatorPage.js";
+            }
+
+            public static partial class TrainingCourseFile
+            {
+                public const string TrainingCourseFilePage = "~/esm/Modules/Administration/TrainingCourseFile/TrainingCourseFilePage.js";
             }
 
             public static partial class TrainingGrade

@@ -34,6 +34,9 @@ public class PermissionKeys
     [Description("Training Schedule Imports")]
     public const string TrainingScheduleImports = "Administration:TrainingScheduleImports";
 
+    [Description("Training Course Files")]
+    public const string TrainingCourseFiles = "Administration:TrainingCourseFiles";
+
     [NestedPermissionKeys, DisplayName("Departments")]
     public class Department
     {
@@ -113,6 +116,15 @@ public class PermissionKeys
         public const string Insert = "Administration:TrainingScheduleImports:Insert";
         public const string Update = "Administration:TrainingScheduleImports:Update";
         public const string Delete = "Administration:TrainingScheduleImports:Delete";
+    }
+
+    [NestedPermissionKeys, DisplayName("Training Course Files")]
+    public class TrainingCourseFile
+    {
+        public const string View = "Administration:TrainingCourseFiles:View";
+        public const string Insert = "Administration:TrainingCourseFiles:Insert";
+        public const string Update = "Administration:TrainingCourseFiles:Update";
+        public const string Delete = "Administration:TrainingCourseFiles:Delete";
     }
 
     [NestedPermissionKeys, DisplayName("Users")]

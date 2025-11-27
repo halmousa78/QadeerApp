@@ -3,7 +3,10 @@ using Serenity.Services;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 using System.IO;
+using System.Linq;
 using Dapper;
+using System.Globalization;
+using QadeerApp.Administration;
 using MyRow = QadeerApp.Administration.TrainingScheduleImportRow;
 
 namespace QadeerApp.Administration.Endpoints;
@@ -65,6 +68,17 @@ public class TrainingScheduleImportEndpoint : ServiceEndpoint
         public int Failed { get; set; }
         public int SkippedExisting { get; set; }
         public int TotalRecords { get; set; }
+        public List<string> Errors { get; set; } = new();
+    }
+
+    public class ImportCourseFilesResponse : ServiceResponse
+    {
+        public int Inserted { get; set; }
+        public int SkippedExisting { get; set; }
+        public int SkippedIncompleteKey { get; set; }
+        public int TotalRecords { get; set; }
+        public List<string> ActiveTerms { get; set; } = new();
+        public List<string> SourceTerms { get; set; } = new();
         public List<string> Errors { get; set; } = new();
     }
 
@@ -271,6 +285,146 @@ public class TrainingScheduleImportEndpoint : ServiceEndpoint
         };
     }
 
+    [HttpPost, AuthorizeCreate(typeof(TrainingCourseFileRow)), IgnoreAntiforgeryToken]
+    public ImportCourseFilesResponse ImportToCourseFiles(IUnitOfWork uow)
+    {
+        var termFld = TrainingTermRow.Fields;
+        var activeTerms = uow.Connection.List<TrainingTermRow>(q => q
+            .Select(termFld.Name)
+            .Where(termFld.IsActive == 1)
+            .Where(termFld.DeleteDate.IsNull()));
+
+        var termNames = activeTerms
+            .Select(x => x.Name?.Trim())
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (termNames.Count == 0)
+            throw new ValidationError("ActiveTermMissing", "TrainingTerm", "No active training term found.");
+
+        var existingKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var existingRows = Dapper.SqlMapper.Query<(int? ReferenceNumber, string Course, string TrainingType)>(
+            uow.Connection,
+            "select ReferenceNumber, Course, TrainingType from TrainingCourseFiles");
+        foreach (var r in existingRows)
+        {
+            var key = CourseFileKey(r.ReferenceNumber, r.Course, r.TrainingType);
+            if (!string.IsNullOrWhiteSpace(key))
+                existingKeys.Add(key);
+        }
+
+        var sourceRows = Dapper.SqlMapper.Query<MyRow>(
+            uow.Connection,
+            "select TrainingTerm, TrainingUnit, Department, TrainingType, TrainerNumber, TrainerName, Day, Time, LectureCount, Course, CourseDescription, LectureDescription, ReferenceNumber, FromText, ToText, Building, RoomNumber, RoomName, ContactHours " +
+            "from TrainingScheduleImports where IsActive = 1 and DeleteDate is null and TrainingTerm in @Terms",
+            new { Terms = termNames }).ToList();
+
+        var sourceTerms = Dapper.SqlMapper.Query<string>(
+            uow.Connection,
+            "select distinct TrainingTerm from TrainingScheduleImports where IsActive = 1 and DeleteDate is null and TrainingTerm is not null").ToList();
+
+        var response = new ImportCourseFilesResponse
+        {
+            TotalRecords = sourceRows.Count,
+            ActiveTerms = termNames,
+            SourceTerms = sourceTerms
+        };
+
+        if (sourceRows.Count == 0)
+        {
+            // Try to find source terms that contain all active-term tokens (helps with minor naming differences).
+            var activeTokenSets = termNames
+                .Select(t => (Original: t, Tokens: TokenizeTerm(t)))
+                .Where(x => x.Tokens.Count > 0)
+                .ToList();
+
+            var candidateTerms = sourceTerms
+                .Select(t => (Original: t, Tokens: TokenizeTerm(t)))
+                .Where(x => x.Tokens.Count > 0)
+                .Where(src => activeTokenSets.Any(act => act.Tokens.All(tok => src.Tokens.Contains(tok))))
+                .Select(x => x.Original)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (candidateTerms.Count > 0)
+            {
+                sourceRows = Dapper.SqlMapper.Query<MyRow>(
+                    uow.Connection,
+                    "select TrainingTerm, TrainingUnit, Department, TrainingType, TrainerNumber, TrainerName, Day, Time, LectureCount, Course, CourseDescription, LectureDescription, ReferenceNumber, FromText, ToText, Building, RoomNumber, RoomName, ContactHours " +
+                    "from TrainingScheduleImports where IsActive = 1 and DeleteDate is null and TrainingTerm in @Terms",
+                    new { Terms = candidateTerms }).ToList();
+                response.Errors.Add($"No exact match for active terms; used similar source terms: {string.Join(" | ", candidateTerms)}.");
+                response.TotalRecords = sourceRows.Count;
+            }
+            else
+            {
+                response.Errors.Add($"No source rows found in TrainingScheduleImports for active terms. Active terms: {string.Join(" | ", termNames)}. Available source terms: {string.Join(" | ", sourceTerms)}.");
+                return response;
+            }
+        }
+
+        const string insertSql = @"
+insert into TrainingCourseFiles
+(TrainingTerm, TrainingUnit, Department, TrainingType, TrainerNumber, TrainerName, Day, Time, LectureCount, Course, CourseDescription, LectureDescription, ReferenceNumber, FromText, ToText, Building, RoomNumber, RoomName, ContactHours, CourseCoordinator, IsActive)
+values
+(@TrainingTerm, @TrainingUnit, @Department, @TrainingType, @TrainerNumber, @TrainerName, @Day, @Time, @LectureCount, @Course, @CourseDescription, @LectureDescription, @ReferenceNumber, @FromText, @ToText, @Building, @RoomNumber, @RoomName, @ContactHours, @CourseCoordinator, @IsActive);";
+
+        foreach (var row in sourceRows)
+        {
+            var key = CourseFileKey(row.ReferenceNumber, row.Course, row.TrainingType);
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                response.SkippedIncompleteKey++;
+                continue;
+            }
+
+            if (existingKeys.Contains(key))
+            {
+                response.SkippedExisting++;
+                continue;
+            }
+
+            try
+            {
+                Dapper.SqlMapper.Execute(uow.Connection, insertSql, new
+                {
+                    row.TrainingTerm,
+                    row.TrainingUnit,
+                    row.Department,
+                    row.TrainingType,
+                    row.TrainerNumber,
+                    row.TrainerName,
+                    row.Day,
+                    row.Time,
+                    row.LectureCount,
+                    row.Course,
+                    row.CourseDescription,
+                    row.LectureDescription,
+                    row.ReferenceNumber,
+                    row.FromText,
+                    row.ToText,
+                    row.Building,
+                    row.RoomNumber,
+                    row.RoomName,
+                    row.ContactHours,
+                    CourseCoordinator = (string)null,
+                    IsActive = 1
+                });
+
+                response.Inserted++;
+                existingKeys.Add(key);
+            }
+            catch (Exception ex)
+            {
+                if (response.Errors.Count < 20)
+                    response.Errors.Add(ex.Message);
+            }
+        }
+
+        return response;
+    }
+
     private static int? ToInt(string value)
     {
         return int.TryParse(value, out var n) ? n : null;
@@ -346,6 +500,51 @@ public class TrainingScheduleImportEndpoint : ServiceEndpoint
     private static string KeyFor(string term, int? trainerNumber, string course, string day, string time)
     {
         return string.Join("|", term?.Trim(), trainerNumber?.ToString(), course?.Trim(), day?.Trim(), time?.Trim());
+    }
+
+    private static string CourseFileKey(int? referenceNumber, string course, string trainingType)
+    {
+        var refText = referenceNumber?.ToString().Trim();
+        var courseText = course?.Trim();
+        var typeText = trainingType?.Trim() ?? string.Empty; // allow empty training type but keep it in key
+
+        // If reference number is missing, fall back to course + type to avoid dropping all rows.
+        if (string.IsNullOrWhiteSpace(courseText))
+            return null;
+
+        if (string.IsNullOrWhiteSpace(refText))
+            return string.Join("|", courseText, typeText);
+
+        return string.Join("|", refText, courseText, typeText);
+    }
+
+    private static HashSet<string> TokenizeTerm(string term)
+    {
+        if (string.IsNullOrWhiteSpace(term))
+            return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        // remove diacritics and non-letter/digit
+        string RemoveDiacritics(string input)
+        {
+            var normalized = input.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+            foreach (var ch in normalized)
+            {
+                var uc = CharUnicodeInfo.GetUnicodeCategory(ch);
+                if (uc != UnicodeCategory.NonSpacingMark)
+                    sb.Append(ch);
+            }
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        var clean = RemoveDiacritics(term).ToLowerInvariant();
+        var tokens = clean
+            .Split(new[] { ' ', '\t', '\r', '\n', '-', '_', '/', '\\', '.', ',', ':' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(t => new string(t.Where(char.IsLetterOrDigit).ToArray()))
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        return tokens;
     }
 
     private const string HeaderTrainingTerm = "الفصل التدريبي";

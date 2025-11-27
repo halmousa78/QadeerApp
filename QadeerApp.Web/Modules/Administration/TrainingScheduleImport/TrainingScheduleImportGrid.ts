@@ -1,4 +1,5 @@
 import { EntityGrid } from "@serenity-is/corelib";
+declare const Q: any;
 import { TrainingScheduleImportColumns, TrainingScheduleImportRow, TrainingScheduleImportService } from "../../ServerTypes/Administration";
 import { nsAdministration } from "../../ServerTypes/Namespaces";
 import { TrainingScheduleImportDialog } from "./TrainingScheduleImportDialog";

@@ -15,5 +15,7 @@ using Administration = QadeerApp.Administration.Pages;
 [assembly: NavigationLink(9292, "Administration/Training Calendar Notes", typeof(Administration.TrainingCalendarNotePage), icon: "fa-sticky-note")]
 [assembly: NavigationLink(9293, "Administration/Portal Links", typeof(Administration.PortalLinkPage), icon: "fa-link")]
 [assembly: NavigationLink(9294, "Administration/Training Schedule Imports", typeof(Administration.TrainingScheduleImportPage), icon: "fa-table")]
+[assembly: NavigationLink(9295, "Administration/Training Course Files", typeof(Administration.TrainingCourseFilePage), icon: "fa-file-text")]
+[assembly: NavigationLink(9296, "Administration/Course Coordinators", typeof(Administration.TrainingCourseCoordinatorPage), icon: "fa-user-circle")]
 [assembly: NavigationLink(9300, "Administration/Roles", typeof(Administration.RolePage), icon: "fa-lock")]
 [assembly: NavigationLink(9400, "Administration/User Management", typeof(Administration.UserPage), icon: "fa-users")]

@@ -1,4 +1,5 @@
 ﻿import { DeleteRequest, DeleteResponse, ListRequest, ListResponse, RetrieveRequest, RetrieveResponse, SaveRequest, SaveResponse, ServiceOptions, ServiceRequest, serviceRequest, ServiceResponse } from "@serenity-is/corelib";
+import { ImportCourseFilesResponse } from "./ImportCourseFilesResponse";
 import { TermRequest } from "./TermRequest";
 import { TrainingScheduleImportRequest } from "./TrainingScheduleImportRequest";
 import { TrainingScheduleImportResponse } from "./TrainingScheduleImportResponse";
@@ -20,6 +21,7 @@ export namespace TrainingScheduleImportService {
     export declare function DeactivateAll(request: ServiceRequest, onSuccess?: (response: ServiceResponse) => void, opt?: ServiceOptions<any>): PromiseLike<ServiceResponse>;
     export declare function DeleteAll(request: ServiceRequest, onSuccess?: (response: ServiceResponse) => void, opt?: ServiceOptions<any>): PromiseLike<ServiceResponse>;
     export declare function Summary(request: ServiceRequest, onSuccess?: (response: TrainingScheduleSummaryResponse) => void, opt?: ServiceOptions<any>): PromiseLike<TrainingScheduleSummaryResponse>;
+    export declare function ImportToCourseFiles(request: ServiceRequest, onSuccess?: (response: ImportCourseFilesResponse) => void, opt?: ServiceOptions<any>): PromiseLike<ImportCourseFilesResponse>;
 
     export const Methods = {
         Create: "Administration/TrainingScheduleImport/Create",
@@ -33,7 +35,8 @@ export namespace TrainingScheduleImportService {
         ActivateAll: "Administration/TrainingScheduleImport/ActivateAll",
         DeactivateAll: "Administration/TrainingScheduleImport/DeactivateAll",
         DeleteAll: "Administration/TrainingScheduleImport/DeleteAll",
-        Summary: "Administration/TrainingScheduleImport/Summary"
+        Summary: "Administration/TrainingScheduleImport/Summary",
+        ImportToCourseFiles: "Administration/TrainingScheduleImport/ImportToCourseFiles"
     } as const;
 
     [
@@ -48,7 +51,8 @@ export namespace TrainingScheduleImportService {
         'ActivateAll',
         'DeactivateAll',
         'DeleteAll',
-        'Summary'
+        'Summary',
+        'ImportToCourseFiles'
     ].forEach(x => {
         (<any>TrainingScheduleImportService)[x] = function (r, s, o) {
             return serviceRequest(baseUrl + '/' + x, r, s, o);
