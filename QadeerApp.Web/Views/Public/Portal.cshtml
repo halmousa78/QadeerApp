@@ -74,9 +74,11 @@
         }
         body.rtl { direction: rtl; text-align: right; }
         body.rtl .navbar-nav { margin-left: 0; margin-right: auto; }
-        .lang-switch { display: inline-flex; align-items: center; gap: 10px; margin-left: 20px; }
-        .lang-switch a { font-weight: 700; text-decoration: none; color: #0b84f3; }
-        .lang-switch a.active { color: #111; }
+        .lang-switch { display: inline-flex; align-items: center; gap: 10px; margin-left: 20px; padding: 6px 10px; background: #f5f8ff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 8px 16px rgba(11,132,243,0.08); }
+        .lang-switch i { color: #0b84f3; }
+        .lang-switch a,
+        .lang-switch a:visited { font-weight: 800; text-decoration: none; color: #0b1f33 !important; }
+        .lang-switch a.active { color: #0b84f3 !important; }
         .navbar-nav { flex: 1; justify-content: center; gap: 18px; }
         .navbar-nav > li > a { font-weight: 800; color: #0b1f33; }
         .navbar-nav > li > a:hover { color: #0b84f3; }
@@ -160,6 +162,7 @@
                                         <a href="~/Account/Login" class="login-btn">@(isRtl ? "تسجيل الدخول" : "Sign In")</a>
                                     </div>
                                     <div class="lang-switch">
+                                        <i class="lni lni-world"></i>
                                         <a class="@(isRtl ? "" : "active")" href="~/Public/Portal?lang=en">EN</a>
                                         <span>|</span>
                                         <a class="@(isRtl ? "active" : "")" href="~/Public/Portal?lang=ar">AR</a>

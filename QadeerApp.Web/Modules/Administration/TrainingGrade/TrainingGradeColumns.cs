@@ -40,6 +40,6 @@ public class TrainingGradeColumns
     [Width(160)]
     public string TrainingTerm { get; set; }
 
-    [Width(80), QuickFilter]
+    [Width(80)]
     public short IsActive { get; set; }
 }

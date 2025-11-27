@@ -19,6 +19,7 @@ public static partial class ESM
     public const string TrainingGradePage = "~/esm/Modules/Administration/TrainingGrade/TrainingGradePage.js";
     public const string TrainingGradePivotDeniedPage = "~/esm/Modules/Administration/TrainingGradePivot/TrainingGradePivotDeniedPage.js";
     public const string TrainingGradePivotPage = "~/esm/Modules/Administration/TrainingGradePivot/TrainingGradePivotPage.js";
+    public const string TrainingScheduleImportPage = "~/esm/Modules/Administration/TrainingScheduleImport/TrainingScheduleImportPage.js";
     public const string TrainingTermPage = "~/esm/Modules/Administration/TrainingTerm/TrainingTermPage.js";
     public const string TranslationPage = "~/esm/Modules/Administration/Translation/TranslationPage.js";
     public const string UserPage = "~/esm/Modules/Administration/User/UserPage.js";
@@ -81,6 +82,11 @@ public static partial class ESM
             {
                 public const string TrainingGradePivotDeniedPage = "~/esm/Modules/Administration/TrainingGradePivot/TrainingGradePivotDeniedPage.js";
                 public const string TrainingGradePivotPage = "~/esm/Modules/Administration/TrainingGradePivot/TrainingGradePivotPage.js";
+            }
+
+            public static partial class TrainingScheduleImport
+            {
+                public const string TrainingScheduleImportPage = "~/esm/Modules/Administration/TrainingScheduleImport/TrainingScheduleImportPage.js";
             }
 
             public static partial class TrainingTerm

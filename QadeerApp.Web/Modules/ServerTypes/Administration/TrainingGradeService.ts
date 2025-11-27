@@ -1,4 +1,4 @@
-﻿import { DeleteRequest, DeleteResponse, ListRequest, ListResponse, RetrieveRequest, RetrieveResponse, SaveRequest, SaveResponse, ServiceOptions, ServiceRequest, serviceRequest } from "@serenity-is/corelib";
+﻿import { DeleteRequest, DeleteResponse, ListRequest, ListResponse, RetrieveRequest, RetrieveResponse, SaveRequest, SaveResponse, ServiceOptions, ServiceRequest, serviceRequest, ServiceResponse } from "@serenity-is/corelib";
 import { BulkDeleteResponse } from "./BulkDeleteResponse";
 import { BulkStatusRequest } from "./BulkStatusRequest";
 import { BulkStatusResponse } from "./BulkStatusResponse";
@@ -7,6 +7,7 @@ import { TrainingGradeImportResponse } from "./TrainingGradeImportResponse";
 import { TrainingGradePivotRequest } from "./TrainingGradePivotRequest";
 import { TrainingGradePivotResponse } from "./TrainingGradePivotResponse";
 import { TrainingGradeRow } from "./TrainingGradeRow";
+import { TrainingGradeSummaryResponse } from "./TrainingGradeSummaryResponse";
 import { TrainingTermListResponse } from "./TrainingTermListResponse";
 
 export namespace TrainingGradeService {
@@ -20,7 +21,11 @@ export namespace TrainingGradeService {
     export declare function Import(request: TrainingGradeImportRequest, onSuccess?: (response: TrainingGradeImportResponse) => void, opt?: ServiceOptions<any>): PromiseLike<TrainingGradeImportResponse>;
     export declare function BulkUpdateStatus(request: BulkStatusRequest, onSuccess?: (response: BulkStatusResponse) => void, opt?: ServiceOptions<any>): PromiseLike<BulkStatusResponse>;
     export declare function BulkDeleteByTerm(request: BulkStatusRequest, onSuccess?: (response: BulkDeleteResponse) => void, opt?: ServiceOptions<any>): PromiseLike<BulkDeleteResponse>;
+    export declare function ActivateAll(request: ServiceRequest, onSuccess?: (response: ServiceResponse) => void, opt?: ServiceOptions<any>): PromiseLike<ServiceResponse>;
+    export declare function DeactivateAll(request: ServiceRequest, onSuccess?: (response: ServiceResponse) => void, opt?: ServiceOptions<any>): PromiseLike<ServiceResponse>;
+    export declare function DeleteAll(request: ServiceRequest, onSuccess?: (response: ServiceResponse) => void, opt?: ServiceOptions<any>): PromiseLike<ServiceResponse>;
     export declare function ListTerms(request: ServiceRequest, onSuccess?: (response: TrainingTermListResponse) => void, opt?: ServiceOptions<any>): PromiseLike<TrainingTermListResponse>;
+    export declare function Summary(request: ServiceRequest, onSuccess?: (response: TrainingGradeSummaryResponse) => void, opt?: ServiceOptions<any>): PromiseLike<TrainingGradeSummaryResponse>;
     export declare function PivotData(request: TrainingGradePivotRequest, onSuccess?: (response: TrainingGradePivotResponse) => void, opt?: ServiceOptions<any>): PromiseLike<TrainingGradePivotResponse>;
 
     export const Methods = {
@@ -32,7 +37,11 @@ export namespace TrainingGradeService {
         Import: "Administration/TrainingGrade/Import",
         BulkUpdateStatus: "Administration/TrainingGrade/BulkUpdateStatus",
         BulkDeleteByTerm: "Administration/TrainingGrade/BulkDeleteByTerm",
+        ActivateAll: "Administration/TrainingGrade/ActivateAll",
+        DeactivateAll: "Administration/TrainingGrade/DeactivateAll",
+        DeleteAll: "Administration/TrainingGrade/DeleteAll",
         ListTerms: "Administration/TrainingGrade/ListTerms",
+        Summary: "Administration/TrainingGrade/Summary",
         PivotData: "Administration/TrainingGrade/PivotData"
     } as const;
 
@@ -45,7 +54,11 @@ export namespace TrainingGradeService {
         'Import',
         'BulkUpdateStatus',
         'BulkDeleteByTerm',
+        'ActivateAll',
+        'DeactivateAll',
+        'DeleteAll',
         'ListTerms',
+        'Summary',
         'PivotData'
     ].forEach(x => {
         (<any>TrainingGradeService)[x] = function (r, s, o) {

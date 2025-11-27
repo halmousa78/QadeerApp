@@ -190,6 +190,39 @@ namespace texts {
                 export const UpdateDate: string;
                 export const UpdateUserId: string;
             }
+            namespace TrainingScheduleImport {
+                export function asKey(): typeof TrainingScheduleImport;
+                export function asTry(): typeof TrainingScheduleImport;
+                export const Building: string;
+                export const ContactHours: string;
+                export const Course: string;
+                export const CourseDescription: string;
+                export const Day: string;
+                export const DeleteDate: string;
+                export const DeleteUserId: string;
+                export const Department: string;
+                export const EntityPlural: string;
+                export const EntitySingular: string;
+                export const FromText: string;
+                export const InsertDate: string;
+                export const InsertUserId: string;
+                export const IsActive: string;
+                export const LectureCount: string;
+                export const LectureDescription: string;
+                export const ReferenceNumber: string;
+                export const RoomName: string;
+                export const RoomNumber: string;
+                export const Time: string;
+                export const ToText: string;
+                export const TrainerName: string;
+                export const TrainerNumber: string;
+                export const TrainingScheduleImportId: string;
+                export const TrainingTerm: string;
+                export const TrainingType: string;
+                export const TrainingUnit: string;
+                export const UpdateDate: string;
+                export const UpdateUserId: string;
+            }
             namespace TrainingTerm {
                 export function asKey(): typeof TrainingTerm;
                 export function asTry(): typeof TrainingTerm;
@@ -460,6 +493,7 @@ const Texts: typeof texts = proxyTexts({}, '', {
             TrainingCalendarNote: {},
             TrainingCourse: {},
             TrainingGrade: {},
+            TrainingScheduleImport: {},
             TrainingTerm: {},
             User: {},
             UserPermission: {},

@@ -20,6 +20,14 @@ namespace QadeerApp.Administration.Endpoints;
 [ConnectionKey(typeof(MyRow)), ServiceAuthorize(typeof(MyRow))]
 public class TrainingGradeEndpoint : ServiceEndpoint
 {
+    public class TrainingGradeSummaryResponse : ServiceResponse
+    {
+        public int Total { get; set; }
+        public int Active { get; set; }
+        public int Inactive { get; set; }
+        public List<string> Terms { get; set; } = new();
+    }
+
     [HttpPost, AuthorizeCreate(typeof(MyRow))]
     public SaveResponse Create(IUnitOfWork uow, SaveRequest<MyRow> request, [FromServices] ITrainingGradeSaveHandler handler)
     {
@@ -200,6 +208,27 @@ public class TrainingGradeEndpoint : ServiceEndpoint
         };
     }
 
+    [HttpPost, AuthorizeUpdate(typeof(MyRow)), IgnoreAntiforgeryToken]
+    public ServiceResponse ActivateAll(IUnitOfWork uow)
+    {
+        DD.Execute(uow.Connection, "update TrainingGrades set IsActive = 1");
+        return new ServiceResponse();
+    }
+
+    [HttpPost, AuthorizeUpdate(typeof(MyRow)), IgnoreAntiforgeryToken]
+    public ServiceResponse DeactivateAll(IUnitOfWork uow)
+    {
+        DD.Execute(uow.Connection, "update TrainingGrades set IsActive = 0");
+        return new ServiceResponse();
+    }
+
+    [HttpPost, AuthorizeDelete(typeof(MyRow)), IgnoreAntiforgeryToken]
+    public ServiceResponse DeleteAll(IUnitOfWork uow)
+    {
+        DD.Execute(uow.Connection, "delete from TrainingGrades");
+        return new ServiceResponse();
+    }
+
     [HttpPost, HttpGet, AuthorizeList(typeof(MyRow))]
     public TrainingTermListResponse ListTerms(IDbConnection connection, ServiceRequest request)
     {
@@ -233,6 +262,27 @@ public class TrainingGradeEndpoint : ServiceEndpoint
         var terms = SD.Query<TrainingTermSummary>(connection, sql).ToList();
         return new TrainingTermListResponse
         {
+            Terms = terms
+        };
+    }
+
+    [HttpPost, AuthorizeList(typeof(MyRow))]
+    public TrainingGradeSummaryResponse Summary(IDbConnection connection)
+    {
+        var counts = DD.QuerySingle<(int Total, int Active, int Inactive)>(
+            connection,
+            "select count(*) as Total, sum(case when IsActive = 1 then 1 else 0 end) as Active, " +
+            "sum(case when IsActive <> 1 then 1 else 0 end) as Inactive from TrainingGrades");
+
+        var terms = DD.Query<string>(
+            connection,
+            "select distinct TrainingTerm from TrainingGrades where TrainingTerm is not null order by TrainingTerm").ToList();
+
+        return new TrainingGradeSummaryResponse
+        {
+            Total = counts.Total,
+            Active = counts.Active,
+            Inactive = counts.Inactive,
             Terms = terms
         };
     }

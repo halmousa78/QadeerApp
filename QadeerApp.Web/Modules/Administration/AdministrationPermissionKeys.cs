@@ -31,6 +31,9 @@ public class PermissionKeys
     [Description("Portal Links Management")]
     public const string PortalLinks = "Administration:PortalLinks";
 
+    [Description("Training Schedule Imports")]
+    public const string TrainingScheduleImports = "Administration:TrainingScheduleImports";
+
     [NestedPermissionKeys, DisplayName("Departments")]
     public class Department
     {
@@ -101,6 +104,15 @@ public class PermissionKeys
         public const string Insert = "Administration:PortalLinks:Insert";
         public const string Update = "Administration:PortalLinks:Update";
         public const string Delete = "Administration:PortalLinks:Delete";
+    }
+
+    [NestedPermissionKeys, DisplayName("Training Schedule Imports")]
+    public class TrainingScheduleImport
+    {
+        public const string View = "Administration:TrainingScheduleImports:View";
+        public const string Insert = "Administration:TrainingScheduleImports:Insert";
+        public const string Update = "Administration:TrainingScheduleImports:Update";
+        public const string Delete = "Administration:TrainingScheduleImports:Delete";
     }
 
     [NestedPermissionKeys, DisplayName("Users")]
